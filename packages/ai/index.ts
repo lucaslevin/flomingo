@@ -1,0 +1,1 @@
+export { generateEmbedding, generatePostEmbedding } from "./embedding";

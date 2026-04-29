@@ -1,5 +1,9 @@
 {
-	"name": "api",
+	"name": "@flomingo/api",
+	"exports": {
+		"./contracts": "./src/contracts/index.ts",
+		"./router": "./src/router.ts"
+	},
 	"scripts": {
 		"dev": "bun run --hot src/index.ts",
 		"build": "bun build src/index.ts --outdir ./dist --target bun",
@@ -8,7 +12,13 @@
 		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"hono": "^4.12.15"
+		"@flomingo/auth": "workspace:*",
+		"@orpc/contract": "^1.14.0",
+		"@orpc/openapi": "^1.14.0",
+		"@orpc/server": "^1.14.0",
+		"@orpc/zod": "^1.14.0",
+		"hono": "^4.12.15",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"

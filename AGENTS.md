@@ -59,3 +59,7 @@ Current version. Use `npx expo install` (not npm/yarn) to update expo packages t
 
 - Base config: `packages/typescript-config/base.json`
 - API tsconfig extends it with Hono JSX settings
+
+## License
+
+MIT License - see `LICENSE` file for details

@@ -29,7 +29,6 @@
 		"packages/*"
 	],
 	"dependencies": {
-		"nanoid": "^5.1.9",
-		"zod": "^4.3.6"
+		"nanoid": "^5.1.9"
 	}
 }
