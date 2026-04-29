@@ -1,9 +1,12 @@
 {
-	"name": "@repo/db",
+	"name": "@flomingo/db",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./index.ts"
+	},
+	"dependencies": {
+		"drizzle-orm": "^0.45.2"
 	}
 }

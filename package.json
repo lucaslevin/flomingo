@@ -10,6 +10,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.13",
+		"@types/bun": "^1.3.13",
+		"drizzle-kit": "^0.31.10",
 		"turbo": "^2.9.6",
 		"typescript": "5.9.2"
 	},
@@ -20,5 +22,9 @@
 	"workspaces": [
 		"apps/*",
 		"packages/*"
-	]
+	],
+	"dependencies": {
+		"nanoid": "^5.1.9",
+		"zod": "^4.3.6"
+	}
 }

@@ -1,12 +1,13 @@
 {
-	"name": "@repo/auth",
+	"name": "@flomingo/auth",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
-	"exports": {
-		".": "./src/index.ts"
+	"scripts": {
+		"generate": "bunx --bun auth@latest generate --output ../db/schema/auth.ts --config ./index.ts --yes"
 	},
 	"dependencies": {
+		"@better-auth/expo": "^1.6.9",
 		"better-auth": "^1.6.9"
 	}
 }
