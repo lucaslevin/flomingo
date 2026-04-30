@@ -13,7 +13,7 @@ export function CreateFab({ onCreate }: CreateFabProps) {
 
 	const handlePress = () => {
 		if (!session) {
-			router.push("/auth-prompt");
+			router.push("/sign-in");
 			return;
 		}
 		router.push("/post/new");

@@ -15,7 +15,7 @@ export function BookmarkToggle({ targetId: _targetId, targetType: _targetType, c
 
 	const handlePress = () => {
 		if (!session) {
-			router.push("/auth-prompt");
+			router.push("/sign-in");
 			return;
 		}
 	};

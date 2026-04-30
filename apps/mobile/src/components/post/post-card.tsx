@@ -1,6 +1,10 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { Button } from "heroui-native";
+import { Pressable, ScrollView, Share, Text, View } from "react-native";
+import { withUniwind } from "uniwind";
+import { formatTimeAgo } from "@/lib/format";
 import { VoteButton } from "./vote-button";
 
 interface PostCardProps {
@@ -15,57 +19,93 @@ interface PostCardProps {
 		score: number;
 		commentCount: number;
 		bookmarkCount: number;
+		attachmentCount: number;
 		userVote?: number;
 	};
+	attachments?: Array<{
+		id: string;
+		type: string;
+		url: string;
+		thumbnailUrl?: string | null;
+		order: number;
+	}>;
 }
 
-export function PostCard({ post }: PostCardProps) {
+const StyledIonicons = withUniwind(Ionicons);
+
+export function PostCard({ post, attachments }: PostCardProps) {
+	const router = useRouter();
 	const timeAgo = formatTimeAgo(post.createdAt);
 
+	const imageAttachments = attachments?.filter((a) => a.type === "image" || a.type === "gif") ?? [];
+	const size = imageAttachments.length === 1 ? 240 : 140;
+
 	return (
-		<View>
-			<View className="px-3 py-3">
-				<Text className="text-xs text-foreground-500">
-					{post.authorName} · c/{post.communitySlug} · {timeAgo}
-				</Text>
+		<Pressable onPress={() => router.push({ pathname: "/post/[id]", params: { id: post.id } })} className="px-4 py-2 gap-3">
+			<Text className="text-xs text-muted">
+				c/{post.communitySlug} · {timeAgo}
+			</Text>
 
-				<Link href={{ pathname: "/post/[id]", params: { id: post.id } }}>
-					<Text className="text-sm font-medium leading-snug mt-1">{post.title}</Text>
-				</Link>
+			<Text className="text-sm text-foreground font-medium leading-snug">{post.title}</Text>
 
-				<View className="flex-row items-center gap-2 mt-2">
+			{imageAttachments.length > 0 && (
+				<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2 px-4" className="-mx-4">
+					{imageAttachments.map((attachment) => (
+						<View key={attachment.id} className="relative rounded-[12px] overflow-hidden">
+							<Image source={{ uri: attachment.thumbnailUrl || attachment.url }} style={{ width: size, height: size }} contentFit="cover" transition={200} />
+							{attachment.type === "gif" && (
+								<View className="absolute bottom-1 right-1 bg-black/60 px-1 py-0.5 rounded">
+									<Text className="text-[10px] text-white font-medium">GIF</Text>
+								</View>
+							)}
+						</View>
+					))}
+				</ScrollView>
+			)}
+
+			<View className="flex-row items-center justify-between">
+				<View className="flex-row items-center gap-1">
+					<Button
+						variant="ghost"
+						size="sm"
+						onPress={(e) => {
+							e.stopPropagation();
+							router.push({ pathname: "/post/[id]", params: { id: post.id } });
+						}}
+					>
+						<StyledIonicons name="chatbubble" size={16} className="text-muted" />
+						<Text className="text-xs text-muted">{post.commentCount}</Text>
+					</Button>
+
+					<Button
+						variant="ghost"
+						size="sm"
+						onPress={(e) => {
+							e.stopPropagation();
+						}}
+					>
+						<StyledIonicons name="bookmark" size={16} className="text-muted" />
+						<Text className="text-xs text-muted">{post.bookmarkCount}</Text>
+					</Button>
+
+					<Button
+						variant="ghost"
+						size="sm"
+						onPress={(e) => {
+							e.stopPropagation();
+							Share.share({
+								message: `Check out this post: ${post.title}`,
+							});
+						}}
+					>
+						<StyledIonicons name="share" size={16} className="text-muted" />
+					</Button>
+				</View>
+
+				<View className="ml-12" onStartShouldSetResponder={() => true} onTouchEnd={(e) => e.stopPropagation()}>
 					<VoteButton postId={post.id} score={post.score} userVote={post.userVote ?? 0} />
-					<Link href={{ pathname: "/post/[id]", params: { id: post.id } }}>
-						<View className="flex-row items-center gap-1">
-							<Ionicons name="chatbubble-outline" size={18} color="#878a8c" />
-							<Text className="text-xs text-foreground-500">{post.commentCount}</Text>
-						</View>
-					</Link>
-					<Pressable>
-						<View className="flex-row items-center gap-1">
-							<Ionicons name="bookmark-outline" size={18} color="#878a8c" />
-							<Text className="text-xs text-foreground-500">{post.bookmarkCount}</Text>
-						</View>
-					</Pressable>
 				</View>
 			</View>
-		</View>
+		</Pressable>
 	);
-}
-
-function formatTimeAgo(timestamp: number): string {
-	const seconds = Math.floor(Date.now() / 1000 - timestamp);
-	const intervals = [
-		{ label: "y", seconds: 31536000 },
-		{ label: "mo", seconds: 2592000 },
-		{ label: "w", seconds: 604800 },
-		{ label: "d", seconds: 86400 },
-		{ label: "h", seconds: 3600 },
-		{ label: "m", seconds: 60 },
-	];
-	for (const interval of intervals) {
-		const count = Math.floor(seconds / interval.seconds);
-		if (count >= 1) return `${count}${interval.label} ago`;
-	}
-	return "just now";
 }

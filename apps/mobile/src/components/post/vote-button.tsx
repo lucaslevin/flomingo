@@ -1,7 +1,9 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
+import { Button } from "heroui-native";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { withUniwind } from "uniwind";
 import { authClient } from "@/lib/auth-client";
 import { orpcClient } from "@/lib/orpc-client";
 
@@ -13,6 +15,8 @@ interface VoteButtonProps {
 	onVote?: () => void;
 }
 
+const StyledIonicons = withUniwind(Ionicons);
+
 export function VoteButton({ postId, commentId, score, userVote, onVote }: VoteButtonProps) {
 	const [optimisticScore, setOptimisticScore] = useState(score);
 	const [optimisticVote, setOptimisticVote] = useState(userVote);
@@ -22,7 +26,7 @@ export function VoteButton({ postId, commentId, score, userVote, onVote }: VoteB
 
 	const handleVote = async (value: 1 | -1 | 0) => {
 		if (!session) {
-			router.push("/auth-prompt");
+			router.push("/sign-in");
 			return;
 		}
 		if (isVoting) return;
@@ -51,20 +55,22 @@ export function VoteButton({ postId, commentId, score, userVote, onVote }: VoteB
 		}
 	};
 
-	const upvoteColor = optimisticVote === 1 ? "#ff4500" : "#878a8c";
-	const downvoteColor = optimisticVote === -1 ? "#7193ff" : "#878a8c";
-
 	return (
-		<View className="flex-row items-center gap-1">
-			<Pressable onPress={() => handleVote(1)} className="p-1">
-				<Ionicons name="arrow-up-circle" size={20} color={upvoteColor} />
-			</Pressable>
-			<Text className="text-xs font-semibold min-w-8 text-center" style={{ color: upvoteColor }}>
+		<View className="flex-row items-center gap-0">
+			<Button isIconOnly variant="ghost" size="sm" onPress={() => handleVote(1)} className="min-w-8 min-h-8">
+				<StyledIonicons name={optimisticVote === 1 ? "arrow-up-circle-fill" : "arrow-up-circle"} size={22} className={optimisticVote === 1 ? "text-accent" : "text-muted"} />
+			</Button>
+
+			<Text
+				className={`text-xs font-semibold min-w-5 text-center ${optimisticVote === 1 ? "text-accent" : optimisticVote === -1 ? "text-danger" : "text-foreground"}`}
+				style={{ fontVariant: ["tabular-nums"] }}
+			>
 				{optimisticScore}
 			</Text>
-			<Pressable onPress={() => handleVote(-1)} className="p-1">
-				<Ionicons name="arrow-down-circle" size={20} color={downvoteColor} />
-			</Pressable>
+
+			<Button isIconOnly variant="ghost" size="sm" onPress={() => handleVote(-1)} className="min-w-8 min-h-8">
+				<StyledIonicons name={optimisticVote === -1 ? "arrow-down-circle-fill" : "arrow-down-circle"} size={22} className={optimisticVote === -1 ? "text-danger" : "text-muted"} />
+			</Button>
 		</View>
 	);
 }
