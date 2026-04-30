@@ -1,5 +1,5 @@
 import { PostList } from "@/components/post/post-list";
-import { usePosts } from "@/hooks/use-posts.hook";
+import { usePosts } from "@/hooks/use-posts";
 
 export default function HomeFeed() {
 	const { posts, isLoading, isValidating, hasMore, setSize, mutate } = usePosts();

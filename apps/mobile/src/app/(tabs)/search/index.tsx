@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
 import { SearchResultCard } from "@/components/search/search-result-card";
-import { useSearch } from "@/hooks/use-search.hook";
+import { useSearch } from "@/hooks/use-search";
 
 export default function SearchScreen() {
 	const [query, setQuery] = useState("");

@@ -5,8 +5,8 @@ import { useState } from "react";
 import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { CommentCard } from "@/components/comment/comment-card";
 import { VoteButton } from "@/components/post/vote-button";
-import { useComments } from "@/hooks/use-comments.hook";
-import { usePost } from "@/hooks/use-post.hook";
+import { useComments } from "@/hooks/use-comments";
+import { usePost } from "@/hooks/use-post";
 import { authClient } from "@/lib/auth-client";
 import { orpcClient } from "@/lib/orpc-client";
 

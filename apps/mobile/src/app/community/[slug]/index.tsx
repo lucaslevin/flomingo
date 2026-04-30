@@ -2,8 +2,8 @@ import { useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { PostList } from "@/components/post/post-list";
 import { CreateFab } from "@/components/ui/create-fab";
-import { useCommunity } from "@/hooks/use-community.hook";
-import { usePosts } from "@/hooks/use-posts.hook";
+import { useCommunity } from "@/hooks/use-community";
+import { usePosts } from "@/hooks/use-posts";
 
 export default function CommunityDetail() {
 	const { slug } = useLocalSearchParams<{ slug: string }>();

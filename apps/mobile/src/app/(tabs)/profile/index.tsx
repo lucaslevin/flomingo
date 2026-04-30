@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import { Button } from "heroui-native";
 import { ScrollView, Text, View } from "react-native";
 import { BookmarkCard } from "@/components/bookmark/bookmark-card";
-import { useBookmarks } from "@/hooks/use-bookmarks.hook";
+import { useBookmarks } from "@/hooks/use-bookmarks";
 import { authClient } from "@/lib/auth-client";
 
 export default function ProfileScreen() {
