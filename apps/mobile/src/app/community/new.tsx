@@ -15,7 +15,7 @@ export default function CreateCommunity() {
 
 	const handleSubmit = async () => {
 		if (!session) {
-			router.push("/auth-prompt");
+			router.push("/sign-in");
 			return;
 		}
 

@@ -1,9 +1,9 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { Button } from "heroui-native";
 import { ScrollView, Text, View } from "react-native";
 import { BookmarkCard } from "@/components/bookmark/bookmark-card";
+import { Avatar } from "@/components/ui/avatar";
 import { useBookmarks } from "@/hooks/use-bookmarks";
 import { authClient } from "@/lib/auth-client";
 
@@ -17,7 +17,7 @@ export default function ProfileScreen() {
 			<ScrollView contentInsetAdjustmentBehavior="automatic">
 				<View className="p-4 bg-background gap-4">
 					<View className="bg-content1 rounded-lg p-4 items-center" style={{ borderCurve: "continuous" }}>
-						<Ionicons name="person-circle" size={64} color="#878a8c" />
+						<Avatar name="Guest" size={64} />
 						<Text className="text-lg font-semibold mt-2">Guest User</Text>
 						<Text className="text-sm text-foreground-400">Sign in to see your profile</Text>
 						<Button onPress={() => router.push("/sign-in")} variant="primary" className="mt-3">
@@ -35,7 +35,7 @@ export default function ProfileScreen() {
 		<ScrollView contentInsetAdjustmentBehavior="automatic">
 			<View className="p-4 bg-background gap-4">
 				<View className="bg-content1 rounded-lg p-4 items-center" style={{ borderCurve: "continuous" }}>
-					{user.image ? <Image source={user.image} className="w-16 h-16" /> : <Ionicons name="person-circle" size={64} color="#878a8c" />}
+					{user.image ? <Image source={user.image} className="w-16 h-16" /> : <Avatar name={user.name || user.email} size={64} />}
 					<Text className="text-lg font-semibold mt-2">{user.name || user.email}</Text>
 					<Text className="text-sm text-foreground-400">{user.email}</Text>
 				</View>

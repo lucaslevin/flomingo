@@ -1,31 +1,40 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import { Button, Input, Label } from "heroui-native";
+import { Button, Input, Label, Separator, Spinner, TextField, useThemeColor } from "heroui-native";
 import { useState } from "react";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Controller, useForm } from "react-hook-form";
+import { Alert, ScrollView, Text, View } from "react-native";
+import { withUniwind } from "uniwind";
+import * as z from "zod";
 import { authClient } from "@/lib/auth-client";
 
-export default function SignIn() {
-	const [isSignUp, setIsSignUp] = useState(false);
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [username, setUsername] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+const StyledIonicons = withUniwind(Ionicons);
 
-	const handleSubmit = async () => {
+const schema = z.object({
+	username: z.string().min(1, "Username is required"),
+	password: z.string().min(1, "Password is required").min(8, "Min 8 characters"),
+});
+
+type FormValues = z.infer<typeof schema>;
+
+export default function SignIn() {
+	const [isLoading, setIsLoading] = useState(false);
+	const accentForeground = useThemeColor("accent-foreground");
+
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormValues>({
+		resolver: zodResolver(schema),
+		defaultValues: { username: "", password: "" },
+	});
+
+	const onSubmit = async (values: FormValues) => {
 		setIsLoading(true);
 		try {
-			if (isSignUp) {
-				await authClient.signUp.email({
-					email,
-					password,
-					name: username,
-				});
-			} else {
-				await authClient.signIn.email({
-					email,
-					password,
-				});
-			}
+			await authClient.signIn.username(values);
 			router.back();
 		} catch {
 			Alert.alert("Error", "Failed to sign in. Please try again.");
@@ -34,13 +43,10 @@ export default function SignIn() {
 		}
 	};
 
-	const handleOAuth = async (provider: "google" | "apple") => {
+	const handleOAuth = async (provider: "google" | "apple" | "facebook") => {
 		setIsLoading(true);
 		try {
-			await authClient.signIn.social({
-				provider,
-				callbackURL: "flomingo://",
-			});
+			await authClient.signIn.social({ provider });
 			router.back();
 		} catch {
 			Alert.alert("Error", `Failed to sign in with ${provider}`);
@@ -50,62 +56,61 @@ export default function SignIn() {
 	};
 
 	return (
-		<ScrollView contentInsetAdjustmentBehavior="automatic" className="bg-background">
-			<View className="p-6 gap-6">
-				<Text className="text-2xl font-bold text-center">{isSignUp ? "Create Account" : "Welcome Back"}</Text>
+		<ScrollView contentInsetAdjustmentBehavior="automatic">
+			<View className="p-4 gap-6">
+				<View className="gap-1 items-center pt-8 pb-4">
+					<Text className="text-2xl font-bold text-foreground">Join the community</Text>
+					<Text className="text-muted text-center">Connect with people who share your interests</Text>
+				</View>
 
 				<View className="gap-4">
-					{isSignUp && (
-						<View className="gap-2">
-							<Label>Username</Label>
-							<Input value={username} onChangeText={setUsername} placeholder="username" autoCapitalize="none" />
-						</View>
-					)}
+					<Controller
+						control={control}
+						name="username"
+						render={({ field: { onChange, onBlur, value } }) => (
+							<TextField isInvalid={!!errors.username}>
+								<Label isInvalid={!!errors.username}>Username</Label>
+								<Input value={value} onChangeText={onChange} onBlur={onBlur} placeholder="Enter your username" autoCapitalize="none" keyboardType="email-address" />
+								{errors.username && <Text className="text-danger text-sm">{errors.username.message}</Text>}
+							</TextField>
+						)}
+					/>
 
-					<View className="gap-2">
-						<Label>Email</Label>
-						<Input value={email} onChangeText={setEmail} placeholder="email@example.com" autoCapitalize="none" keyboardType="email-address" />
-					</View>
+					<Controller
+						control={control}
+						name="password"
+						render={({ field: { onChange, onBlur, value } }) => (
+							<TextField isInvalid={!!errors.password}>
+								<Label isInvalid={!!errors.password}>Password</Label>
+								<Input value={value} onChangeText={onChange} onBlur={onBlur} placeholder="Enter your password" secureTextEntry />
+								{errors.password && <Text className="text-danger text-sm">{errors.password.message}</Text>}
+							</TextField>
+						)}
+					/>
 
-					<View className="gap-2">
-						<Label>Password</Label>
-						<Input value={password} onChangeText={setPassword} placeholder="password" secureTextEntry />
-					</View>
-
-					<Button onPress={handleSubmit} isLoading={isLoading} variant="primary" className="mt-2">
-						{isSignUp ? "Create Account" : "Sign In"}
+					<Button onPress={handleSubmit(onSubmit)} variant="primary" className="mt-2">
+						{isLoading ? <Spinner color={accentForeground} /> : <Button.Label>Continue</Button.Label>}
 					</Button>
 				</View>
 
-				<View className="flex-row items-center gap-2">
-					<View className="flex-1 h-px bg-foreground-200" />
-					<Text className="text-foreground-400 text-sm">or continue with</Text>
-					<View className="flex-1 h-px bg-foreground-200" />
+				<Separator className="mx-10" />
+
+				<View className="gap-4">
+					<Button variant="outline" className="justify-between" onPress={() => handleOAuth("facebook")} isDisabled={isLoading}>
+						<Button.Label>Continue with Facebook</Button.Label>
+						<StyledIonicons name="logo-facebook" size={20} className="text-foreground" />
+					</Button>
+
+					<Button variant="outline" className="justify-between" onPress={() => handleOAuth("google")} isDisabled={isLoading}>
+						<Button.Label>Continue with Google</Button.Label>
+						<StyledIonicons name="logo-google" size={20} className="text-foreground" />
+					</Button>
+
+					<Button variant="outline" className="justify-between" onPress={() => handleOAuth("apple")} isDisabled={isLoading}>
+						<Button.Label>Continue with Apple</Button.Label>
+						<StyledIonicons name="logo-apple" size={20} className="text-foreground" />
+					</Button>
 				</View>
-
-				<View className="gap-3">
-					<Pressable
-						onPress={() => handleOAuth("google")}
-						disabled={isLoading}
-						className="flex-row items-center justify-center gap-3 bg-white rounded-lg p-4"
-						style={{ borderCurve: "continuous" }}
-					>
-						<Text>Google</Text>
-					</Pressable>
-
-					<Pressable
-						onPress={() => handleOAuth("apple")}
-						disabled={isLoading}
-						className="flex-row items-center justify-center gap-3 bg-white rounded-lg p-4"
-						style={{ borderCurve: "continuous" }}
-					>
-						<Text>Apple</Text>
-					</Pressable>
-				</View>
-
-				<Pressable onPress={() => setIsSignUp(!isSignUp)} className="items-center">
-					<Text className="text-foreground-500">{isSignUp ? "Already have an account? Sign In" : "Don't have an account? Create one"}</Text>
-				</Pressable>
 			</View>
 		</ScrollView>
 	);

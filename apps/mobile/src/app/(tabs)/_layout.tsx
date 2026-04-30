@@ -1,27 +1,40 @@
+import { ThemeProvider } from "@react-navigation/native";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { DynamicColorIOS } from "react-native";
+import { useTheme } from "@/lib/theme";
 
-export default function TabLayout() {
+function ThemedTabLayout() {
+	const theme = useTheme();
+
 	return (
-		<NativeTabs
-			minimizeBehavior="onScrollDown"
-			labelStyle={{ color: DynamicColorIOS({ dark: "white", light: "black" }) }}
-			tintColor={DynamicColorIOS({ dark: "white", light: "black" })}
-		>
-			<NativeTabs.Trigger name="(home)">
-				<NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-				<NativeTabs.Trigger.Icon sf={{ default: "house", selected: "house.fill" }} md="home" />
-			</NativeTabs.Trigger>
+		<ThemeProvider value={theme}>
+			<NativeTabs
+				minimizeBehavior="onScrollDown"
+				labelStyle={{ color: DynamicColorIOS({ dark: "white", light: "black" }) }}
+				tintColor={DynamicColorIOS({ dark: "white", light: "black" })}
+			>
+				<NativeTabs.Trigger name="(feed)">
+					<NativeTabs.Trigger.Label>Feed</NativeTabs.Trigger.Label>
+					<NativeTabs.Trigger.Icon sf={{ default: "flame", selected: "flame.fill" }} md="whatshot" />
+				</NativeTabs.Trigger>
 
-			<NativeTabs.Trigger name="profile">
-				<NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
-				<NativeTabs.Trigger.Icon sf={{ default: "person", selected: "person.fill" }} md="person" />
-			</NativeTabs.Trigger>
+				<NativeTabs.Trigger name="clubs">
+					<NativeTabs.Trigger.Label>Clubs</NativeTabs.Trigger.Label>
+					<NativeTabs.Trigger.Icon sf={{ default: "person.2", selected: "person.2.fill" }} md="group" />
+				</NativeTabs.Trigger>
 
-			<NativeTabs.Trigger name="search" role="search">
-				<NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
-				<NativeTabs.Trigger.Icon sf={{ default: "magnifyingglass", selected: "magnifyingglass" }} md="search" />
-			</NativeTabs.Trigger>
-		</NativeTabs>
+				<NativeTabs.Trigger name="inbox">
+					<NativeTabs.Trigger.Label>Inbox</NativeTabs.Trigger.Label>
+					<NativeTabs.Trigger.Icon sf={{ default: "envelope", selected: "envelope.fill" }} md="email" />
+				</NativeTabs.Trigger>
+
+				<NativeTabs.Trigger name="search" role="search">
+					<NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
+					<NativeTabs.Trigger.Icon sf={{ default: "magnifyingglass", selected: "magnifyingglass" }} md="search" />
+				</NativeTabs.Trigger>
+			</NativeTabs>
+		</ThemeProvider>
 	);
 }
+
+export default ThemedTabLayout;

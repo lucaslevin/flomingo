@@ -1,3 +1,4 @@
+import { detectMediaInContent } from "@flomingo/utils/opengraph";
 import { router } from "expo-router";
 import { Button, Input, Label, TextArea } from "heroui-native";
 import { useState } from "react";
@@ -9,14 +10,14 @@ export default function CreatePost() {
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
 	const [communityId, setCommunityId] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const { data } = authClient.useSession();
 	const session = data?.session;
 
 	const handleSubmit = async () => {
 		if (!session) {
-			router.push("/auth-prompt");
+			router.push("/sign-in");
 			return;
 		}
 
@@ -25,18 +26,32 @@ export default function CreatePost() {
 			return;
 		}
 
-		setIsLoading(true);
+		setIsSubmitting(true);
 		try {
-			await orpcClient.post.create({
+			const { id: postId } = await orpcClient.post.create({
 				title: title.trim(),
 				content: content.trim(),
 				communityId: communityId.trim(),
 			});
+
+			const detectedMedia = detectMediaInContent(content);
+			for (const [index, media] of detectedMedia.entries()) {
+				if (media.type === "link") {
+					await orpcClient.attachment.create({
+						postId,
+						type: "link",
+						url: media.url,
+						order: index,
+					});
+				}
+			}
+
 			router.back();
-		} catch {
+		} catch (err) {
 			Alert.alert("Error", "Failed to create post. Please try again.");
+			console.error(err);
 		} finally {
-			setIsLoading(false);
+			setIsSubmitting(false);
 		}
 	};
 
@@ -60,7 +75,7 @@ export default function CreatePost() {
 					<TextArea value={content} onChangeText={setContent} placeholder="What's on your mind?" numberOfLines={8} className="min-h-32" />
 				</View>
 
-				<Button onPress={handleSubmit} isLoading={isLoading} variant="primary" className="mt-2" isDisabled={!title.trim() || !content.trim()}>
+				<Button onPress={handleSubmit} variant="primary" className="mt-2" isDisabled={!title.trim() || !content.trim() || isSubmitting}>
 					Post
 				</Button>
 			</View>
