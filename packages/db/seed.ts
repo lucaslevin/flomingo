@@ -40,11 +40,7 @@ const postsData: Array<{
 	{
 		title: "My new gaming setup",
 		content: "Just finished my battlestation build. Here's what I ended up with after months of research!",
-		images: [
-			"https://picsum.photos/seed/setup1/800/600",
-			"https://picsum.photos/seed/setup2/800/600",
-			"https://picsum.photos/seed/setup3/800/600",
-		],
+		images: ["https://picsum.photos/seed/setup1/800/600", "https://picsum.photos/seed/setup2/800/600", "https://picsum.photos/seed/setup3/800/600"],
 	},
 	{
 		title: "Tokyo and Osaka itinerary",
@@ -64,10 +60,7 @@ const postsData: Array<{
 	{
 		title: "Best pizza dough recipe",
 		content: "After years of perfecting my dough, here's my go-to recipe for crispy yet chewy crust",
-		images: [
-			"https://picsum.photos/seed/pizza1/800/600",
-			"https://picsum.photos/seed/pizza2/800/600",
-		],
+		images: ["https://picsum.photos/seed/pizza1/800/600", "https://picsum.photos/seed/pizza2/800/600"],
 		link: {
 			url: "https://www.seriouseats.com/pizza-dough-recipe",
 			title: "Perfect Pizza Dough Recipe",
@@ -88,10 +81,7 @@ const postsData: Array<{
 	{
 		title: "Gaming PC build guide",
 		content: "Finally upgraded after 5 years. RTX 4080, Ryzen 9, 64GB RAM. Here's how it performs",
-		images: [
-			"https://picsum.photos/seed/pc1/800/600",
-			"https://picsum.photos/seed/pc2/800/600",
-		],
+		images: ["https://picsum.photos/seed/pc1/800/600", "https://picsum.photos/seed/pc2/800/600"],
 		link: {
 			url: "https://pcpartpicker.com",
 			title: "PCPartPicker - Build Guides",
@@ -102,10 +92,7 @@ const postsData: Array<{
 	{
 		title: "Sourdough first bake",
 		content: "My 7-day starter finally ready. First loaf came out decent but needs more practice",
-		images: [
-			"https://picsum.photos/seed/bread1/800/600",
-			"https://picsum.photos/seed/bread2/800/600",
-		],
+		images: ["https://picsum.photos/seed/bread1/800/600", "https://picsum.photos/seed/bread2/800/600"],
 	},
 	{
 		title: "Barcelona trip",
@@ -120,10 +107,7 @@ const postsData: Array<{
 	{
 		title: "Home gym progress",
 		content: "6 months of consistent training. Down 20lbs, up 50lbs on deadlift",
-		images: [
-			"https://picsum.photos/seed/gym1/800/600",
-			"https://picsum.photos/seed/gym2/800/600",
-		],
+		images: ["https://picsum.photos/seed/gym1/800/600", "https://picsum.photos/seed/gym2/800/600"],
 	},
 	{
 		title: "Dune 2 was incredible",
@@ -133,10 +117,7 @@ const postsData: Array<{
 	{
 		title: "London hidden gems",
 		content: "Been living here 3 years, here are my favorite spots that tourists usually miss",
-		images: [
-			"https://picsum.photos/seed/london1/800/600",
-			"https://picsum.photos/seed/london2/800/600",
-		],
+		images: ["https://picsum.photos/seed/london1/800/600", "https://picsum.photos/seed/london2/800/600"],
 		link: {
 			url: "https://www.timeout.com/london/things-to-do/best-hidden-gems-london",
 			title: "Hidden Gems in London",
@@ -147,11 +128,7 @@ const postsData: Array<{
 	{
 		title: "New board game collection",
 		content: "Finally got a proper shelf for my board games. Here's the collection so far",
-		images: [
-			"https://picsum.photos/seed/boardgame1/800/600",
-			"https://picsum.photos/seed/boardgame2/800/600",
-			"https://picsum.photos/seed/boardgame3/800/600",
-		],
+		images: ["https://picsum.photos/seed/boardgame1/800/600", "https://picsum.photos/seed/boardgame2/800/600", "https://picsum.photos/seed/boardgame3/800/600"],
 	},
 	{
 		title: "Morning coffee setup",
@@ -161,10 +138,7 @@ const postsData: Array<{
 	{
 		title: "New camera day",
 		content: "Finally upgraded from my old Nikon to a Sony A7IV. First impressions",
-		images: [
-			"https://picsum.photos/seed/camera1/800/600",
-			"https://picsum.photos/seed/camera2/800/600",
-		],
+		images: ["https://picsum.photos/seed/camera1/800/600", "https://picsum.photos/seed/camera2/800/600"],
 		link: {
 			url: "https://www.sony.com/INTERFACE/CAMERA/ILCE-7M4",
 			title: "Sony A7IV Product Page",
@@ -206,10 +180,7 @@ const postsData: Array<{
 	{
 		title: "Air fryer chicken wings",
 		content: "20 minutes, crispy skin, no deep frying needed. Recipe in comments",
-		images: [
-			"https://picsum.photos/seed/wings1/800/600",
-			"https://picsum.photos/seed/wings2/800/600",
-		],
+		images: ["https://picsum.photos/seed/wings1/800/600", "https://picsum.photos/seed/wings2/800/600"],
 	},
 	{
 		title: "Marathon training week 8",
@@ -219,10 +190,7 @@ const postsData: Array<{
 	{
 		title: "Minimalist desk setup",
 		content: "Cleaned up my desk and went full minimalist. So much more productive now",
-		images: [
-			"https://picsum.photos/seed/desk1/800/600",
-			"https://picsum.photos/seed/desk2/800/600",
-		],
+		images: ["https://picsum.photos/seed/desk1/800/600", "https://picsum.photos/seed/desk2/800/600"],
 	},
 ];
 
@@ -262,18 +230,7 @@ const secondLevelReplies = [
 	"This is gold.",
 ];
 
-const thirdLevelReplies = [
-	"Haha same",
-	"Exactly!",
-	"Ha! True that.",
-	"Seriously though",
-	"This x100",
-	"So me",
-	"Pretty much",
-	"Yesss",
-	"Absolutely",
-	" facts",
-];
+const thirdLevelReplies = ["Haha same", "Exactly!", "Ha! True that.", "Seriously though", "This x100", "So me", "Pretty much", "Yesss", "Absolutely", " facts"];
 
 async function seed() {
 	console.log("Seeding database...");
@@ -286,14 +243,17 @@ async function seed() {
 	for (const community of communities) {
 		const id = nanoid();
 		communityIds.push(id);
-		await db.insert(schema.communities).values({
-			id,
-			name: community.name,
-			slug: community.slug,
-			description: community.description,
-			createdAt: new Date(now.getTime() - 60 * oneDay),
-			updatedAt: new Date(now.getTime() - 60 * oneDay),
-		}).onConflictDoNothing();
+		await db
+			.insert(schema.communities)
+			.values({
+				id,
+				name: community.name,
+				slug: community.slug,
+				description: community.description,
+				createdAt: new Date(now.getTime() - 60 * oneDay),
+				updatedAt: new Date(now.getTime() - 60 * oneDay),
+			})
+			.onConflictDoNothing();
 	}
 	console.log(`Created ${communities.length} communities`);
 
@@ -302,13 +262,16 @@ async function seed() {
 	for (const user of users) {
 		const id = nanoid();
 		userIds.push(id);
-		await db.insert(schema.users).values({
-			id,
-			name: user.name,
-			email: user.email,
-			createdAt: new Date(now.getTime() - 45 * oneDay),
-			updatedAt: new Date(now.getTime() - 45 * oneDay),
-		}).onConflictDoNothing();
+		await db
+			.insert(schema.users)
+			.values({
+				id,
+				name: user.name,
+				email: user.email,
+				createdAt: new Date(now.getTime() - 45 * oneDay),
+				updatedAt: new Date(now.getTime() - 45 * oneDay),
+			})
+			.onConflictDoNothing();
 	}
 	console.log(`Created ${users.length} users`);
 
@@ -435,14 +398,17 @@ async function seed() {
 	let voteCount = 0;
 	for (const postId of postIds) {
 		for (let v = 0; v < 5; v++) {
-			await db.insert(schema.votes).values({
-				id: nanoid(),
-				userId: userIds[Math.floor(Math.random() * userIds.length)],
-				targetId: postId,
-				targetType: "post",
-				value: Math.random() > 0.25 ? 1 : -1,
-				createdAt: new Date(now.getTime() - Math.random() * 24 * oneHour),
-			}).onConflictDoNothing();
+			await db
+				.insert(schema.votes)
+				.values({
+					id: nanoid(),
+					userId: userIds[Math.floor(Math.random() * userIds.length)],
+					targetId: postId,
+					targetType: "post",
+					value: Math.random() > 0.25 ? 1 : -1,
+					createdAt: new Date(now.getTime() - Math.random() * 24 * oneHour),
+				})
+				.onConflictDoNothing();
 			voteCount++;
 		}
 	}
@@ -452,12 +418,15 @@ async function seed() {
 	let cfCount = 0;
 	for (const userId of userIds) {
 		for (let c = 0; c < 4; c++) {
-			await db.insert(schema.communityFollowers).values({
-				id: nanoid(),
-				userId,
-				communityId: communityIds[Math.floor(Math.random() * communityIds.length)],
-				createdAt: new Date(now.getTime() - Math.random() * 20 * oneDay),
-			}).onConflictDoNothing();
+			await db
+				.insert(schema.communityFollowers)
+				.values({
+					id: nanoid(),
+					userId,
+					communityId: communityIds[Math.floor(Math.random() * communityIds.length)],
+					createdAt: new Date(now.getTime() - Math.random() * 20 * oneDay),
+				})
+				.onConflictDoNothing();
 			cfCount++;
 		}
 	}
@@ -467,12 +436,15 @@ async function seed() {
 	let ufCount = 0;
 	for (let i = 0; i < userIds.length; i++) {
 		for (let f = 1; f < 3; f++) {
-			await db.insert(schema.userFollows).values({
-				id: nanoid(),
-				followerId: userIds[i],
-				followingId: userIds[(i + f) % userIds.length],
-				createdAt: new Date(now.getTime() - Math.random() * 10 * oneDay),
-			}).onConflictDoNothing();
+			await db
+				.insert(schema.userFollows)
+				.values({
+					id: nanoid(),
+					followerId: userIds[i],
+					followingId: userIds[(i + f) % userIds.length],
+					createdAt: new Date(now.getTime() - Math.random() * 10 * oneDay),
+				})
+				.onConflictDoNothing();
 			ufCount++;
 		}
 	}

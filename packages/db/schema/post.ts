@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
 import { index, pgTable, text, timestamp, vector } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
-import { users } from "./auth";
 import { attachments } from "./attachment";
+import { users } from "./auth";
 import { comments } from "./comment";
 import { communities } from "./community";
 import { votes } from "./vote";

@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { index, integer, pgTable, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { index, integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { posts } from "./post";
 
@@ -24,10 +24,7 @@ export const attachments = pgTable(
 			.notNull()
 			.$defaultFn(() => new Date()),
 	},
-	(table) => [
-		index("attachments_postId_idx").on(table.postId),
-		index("attachments_order_idx").on(table.order),
-	],
+	(table) => [index("attachments_postId_idx").on(table.postId), index("attachments_order_idx").on(table.order)],
 );
 
 export const attachmentsRelations = relations(attachments, ({ one }) => ({

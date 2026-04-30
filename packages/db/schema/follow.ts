@@ -4,10 +4,14 @@ import { nanoid } from "nanoid";
 export const communityFollowers = pgTable(
 	"communityFollowers",
 	{
-		id: text("id").$defaultFn(() => nanoid()).primaryKey(),
+		id: text("id")
+			.$defaultFn(() => nanoid())
+			.primaryKey(),
 		userId: text("userId").notNull(),
 		communityId: text("communityId").notNull(),
-		createdAt: timestamp("createdAt").notNull().$defaultFn(() => new Date()),
+		createdAt: timestamp("createdAt")
+			.notNull()
+			.$defaultFn(() => new Date()),
 	},
 	(table) => [
 		uniqueIndex("communityFollowers_user_community_idx").on(table.userId, table.communityId),
@@ -19,10 +23,14 @@ export const communityFollowers = pgTable(
 export const userFollows = pgTable(
 	"userFollows",
 	{
-		id: text("id").$defaultFn(() => nanoid()).primaryKey(),
+		id: text("id")
+			.$defaultFn(() => nanoid())
+			.primaryKey(),
 		followerId: text("followerId").notNull(),
 		followingId: text("followingId").notNull(),
-		createdAt: timestamp("createdAt").notNull().$defaultFn(() => new Date()),
+		createdAt: timestamp("createdAt")
+			.notNull()
+			.$defaultFn(() => new Date()),
 	},
 	(table) => [
 		uniqueIndex("userFollows_unique_idx").on(table.followerId, table.followingId),
