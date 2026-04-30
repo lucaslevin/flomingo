@@ -25,6 +25,9 @@ export const searchContract = {
 							communitySlug: z.string(),
 							similarity: z.number(),
 							createdAt: z.number(),
+							voteScore: z.number(),
+							commentCount: z.number(),
+							combinedScore: z.number(),
 						}),
 						z.object({
 							type: z.literal("comment"),
@@ -35,6 +38,8 @@ export const searchContract = {
 							postId: z.string(),
 							similarity: z.number(),
 							createdAt: z.number(),
+							voteScore: z.number(),
+							combinedScore: z.number(),
 						}),
 					]),
 				),

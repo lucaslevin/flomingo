@@ -40,6 +40,7 @@ export const byIdPost = pub.post.byId.handler(async ({ input }) => {
 		with: {
 			author: true,
 			community: true,
+			attachments: true,
 		},
 	});
 
@@ -74,6 +75,16 @@ export const byIdPost = pub.post.byId.handler(async ({ input }) => {
 		score,
 		userVote: 0,
 		bookmarkCount,
+		attachments: (post.attachments ?? []).map((a) => ({
+			id: a.id,
+			type: a.type,
+			url: a.url,
+			thumbnailUrl: a.thumbnailUrl,
+			order: a.order,
+			ogTitle: a.ogTitle,
+			ogDescription: a.ogDescription,
+			ogImageUrl: a.ogImageUrl,
+		})),
 	};
 });
 
@@ -104,7 +115,7 @@ export const listPost = pub.post.list.handler(async ({ input }) => {
 
 	const postIds = results.map((p) => p.id);
 
-	const [voteRows, commentRows, bookmarkRows] = await Promise.all([
+	const [voteRows, commentRows, bookmarkRows, attachmentRows] = await Promise.all([
 		db
 			.select({ targetId: schema.votes.targetId, score: sql<number>`coalesce(sum(${schema.votes.value}), 0)` })
 			.from(schema.votes)
@@ -120,23 +131,30 @@ export const listPost = pub.post.list.handler(async ({ input }) => {
 			.from(schema.bookmarks)
 			.where(and(inArray(schema.bookmarks.targetId, postIds), eq(schema.bookmarks.targetType, "post")))
 			.groupBy(schema.bookmarks.targetId),
+		db
+			.select({ postId: schema.attachments.postId, count: count(schema.attachments.id) })
+			.from(schema.attachments)
+			.where(inArray(schema.attachments.postId, postIds))
+			.groupBy(schema.attachments.postId),
 	]);
 
 	const scoreMap = new Map(voteRows.map((v) => [v.targetId, v.score]));
 	const commentCountMap = new Map(commentRows.map((c) => [c.postId, c.count]));
 	const bookmarkCountMap = new Map(bookmarkRows.map((b) => [b.targetId, b.count]));
+	const attachmentCountMap = new Map(attachmentRows.map((a) => [a.postId, a.count]));
 
 	const postsWithCounts = results.map((post) => ({
 		id: post.id,
 		title: post.title,
 		authorId: post.authorId,
-		authorName: post.author?.name ?? "Unknown",
+		authorName: post.author.name,
 		communityId: post.communityId,
-		communitySlug: post.community?.slug ?? "unknown",
+		communitySlug: post.community.slug,
 		createdAt: Number(post.createdAt.getTime()),
 		score: Number(scoreMap.get(post.id)) || 0,
 		commentCount: Number(commentCountMap.get(post.id)) || 0,
 		bookmarkCount: Number(bookmarkCountMap.get(post.id)) || 0,
+		attachmentCount: Number(attachmentCountMap.get(post.id)) || 0,
 	}));
 
 	return {

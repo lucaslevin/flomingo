@@ -1,6 +1,17 @@
 import { oc } from "@orpc/contract";
 import { z } from "zod";
 
+const attachmentSchema = z.object({
+	id: z.string(),
+	type: z.string(),
+	url: z.string(),
+	thumbnailUrl: z.string().nullable(),
+	order: z.number(),
+	ogTitle: z.string().nullable(),
+	ogDescription: z.string().nullable(),
+	ogImageUrl: z.string().nullable(),
+});
+
 export const postContract = {
 	create: oc
 		.input(
@@ -35,6 +46,7 @@ export const postContract = {
 			score: z.number(),
 			userVote: z.number(),
 			bookmarkCount: z.number(),
+			attachments: z.array(attachmentSchema),
 		}),
 	),
 
@@ -60,6 +72,7 @@ export const postContract = {
 						score: z.number(),
 						commentCount: z.number(),
 						bookmarkCount: z.number(),
+						attachmentCount: z.number(),
 					}),
 				),
 				nextCursor: z.number().nullable(),

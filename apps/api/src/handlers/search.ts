@@ -1,7 +1,13 @@
 import { generateEmbedding } from "@flomingo/ai";
 import { db, schema } from "@flomingo/db";
-import { cosineDistance, desc, sql } from "drizzle-orm";
+import { cosineDistance, desc, inArray, sql } from "drizzle-orm";
 import { pub } from "../procedures";
+
+const SIMILARITY_WEIGHT = 0.7;
+const POPULARITY_WEIGHT = 0.3;
+const DECAY_HALF_LIFE_HOURS = 24 * 7;
+const MAX_VOTE_SCORE = 50;
+const MAX_COMMENT_COUNT = 20;
 
 type PostResult = {
 	type: "post";
@@ -14,6 +20,9 @@ type PostResult = {
 	communitySlug: string;
 	similarity: number;
 	createdAt: number;
+	voteScore: number;
+	commentCount: number;
+	combinedScore: number;
 };
 
 type CommentResult = {
@@ -25,9 +34,34 @@ type CommentResult = {
 	postId: string;
 	similarity: number;
 	createdAt: number;
+	voteScore: number;
+	combinedScore: number;
 };
 
 type SearchResult = PostResult | CommentResult;
+
+function timeDecay(ageInHours: number): number {
+	return Math.exp(-(ageInHours / DECAY_HALF_LIFE_HOURS) * Math.LN2);
+}
+
+function calculatePopularityScore(voteScore: number, commentCount: number, createdAt: number): number {
+	const ageInHours = (Date.now() - createdAt) / (1000 * 60 * 60);
+	const decay = timeDecay(ageInHours);
+
+	const normalizedVotes = Math.min(Math.abs(voteScore) / MAX_VOTE_SCORE, 1);
+	const normalizedComments = Math.min(commentCount / MAX_COMMENT_COUNT, 1);
+
+	return (normalizedVotes * 0.6 + normalizedComments * 0.4) * decay;
+}
+
+function calculateCombinedScore(item: SearchResult): number {
+	const voteScore = item.voteScore ?? 0;
+	const commentCount = item.type === "post" ? (item.commentCount ?? 0) : 0;
+
+	const popularityScore = calculatePopularityScore(voteScore, commentCount, item.createdAt);
+
+	return SIMILARITY_WEIGHT * item.similarity + POPULARITY_WEIGHT * popularityScore;
+}
 
 export const searchContent = pub.search.query.handler(async ({ input }) => {
 	const queryEmbedding = await generateEmbedding(input.query);
@@ -58,7 +92,7 @@ export const searchContent = pub.search.query.handler(async ({ input }) => {
 			.innerJoin(schema.users, sql`${schema.posts.authorId} = ${schema.users.id}`)
 			.innerJoin(schema.communities, sql`${schema.posts.communityId} = ${schema.communities.id}`)
 			.where(sql`${schema.posts.embedding} IS NOT NULL`)
-			.orderBy((t) => desc(t.similarity))
+			.orderBy(desc(postsWithSimilarity))
 			.limit(input.limit);
 
 		for (const post of posts) {
@@ -73,6 +107,9 @@ export const searchContent = pub.search.query.handler(async ({ input }) => {
 				communitySlug: post.communitySlug,
 				similarity: Number(post.similarity) || 0,
 				createdAt: post.createdAt.getTime(),
+				voteScore: 0,
+				commentCount: 0,
+				combinedScore: 0,
 			});
 		}
 	}
@@ -93,7 +130,7 @@ export const searchContent = pub.search.query.handler(async ({ input }) => {
 			.from(schema.comments)
 			.innerJoin(schema.users, sql`${schema.comments.authorId} = ${schema.users.id}`)
 			.where(sql`${schema.comments.embedding} IS NOT NULL`)
-			.orderBy((t) => desc(t.similarity))
+			.orderBy(desc(commentsWithSimilarity))
 			.limit(input.limit);
 
 		for (const comment of comments) {
@@ -106,14 +143,51 @@ export const searchContent = pub.search.query.handler(async ({ input }) => {
 				postId: comment.postId,
 				similarity: Number(comment.similarity) || 0,
 				createdAt: comment.createdAt.getTime(),
+				voteScore: 0,
+				combinedScore: 0,
 			});
 		}
 	}
 
-	const results: SearchResult[] = [...postResults, ...commentResults].sort((a, b) => b.similarity - a.similarity);
+	const allResults: SearchResult[] = [...postResults, ...commentResults];
+
+	if (allResults.length > 0) {
+		const allIds = allResults.map((r) => r.id);
+		const postIds = postResults.map((p) => p.id);
+
+		const [voteRows, commentRows] = await Promise.all([
+			db
+				.select({ targetId: schema.votes.targetId, score: sql<number>`coalesce(sum(${schema.votes.value}), 0)` })
+				.from(schema.votes)
+				.where(inArray(schema.votes.targetId, allIds))
+				.groupBy(schema.votes.targetId),
+			db
+				.select({ postId: schema.comments.postId, count: sql<number>`count(*)` })
+				.from(schema.comments)
+				.where(inArray(schema.comments.postId, postIds))
+				.groupBy(schema.comments.postId),
+		]);
+
+		const voteScoreMap = new Map(voteRows.map((v) => [v.targetId, Number(v.score) || 0]));
+		const commentCountMap = new Map(commentRows.map((c) => [c.postId, Number(c.count) || 0]));
+
+		for (const result of allResults) {
+			result.voteScore = voteScoreMap.get(result.id) ?? 0;
+			if (result.type === "post") {
+				result.commentCount = commentCountMap.get(result.id) ?? 0;
+			}
+		}
+	}
+
+	const results = allResults
+		.map((item) => ({
+			...item,
+			combinedScore: calculateCombinedScore(item),
+		}))
+		.sort((a, b) => b.combinedScore - a.combinedScore);
 
 	return {
-		results: results.slice(0, input.limit),
+		results: results.slice(0, input.limit) as SearchResult[],
 		query: input.query,
 	};
 });
