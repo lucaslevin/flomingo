@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { ScrollView, View, Text, ActivityIndicator, Pressable, Alert } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useLocalSearchParams, router } from "expo-router";
-import { usePost } from "@/hooks/use-post.hook";
+import { router, useLocalSearchParams } from "expo-router";
+import { Button, TextArea } from "heroui-native";
+import { useState } from "react";
+import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { CommentCard } from "@/components/comment/comment-card";
+import { VoteButton } from "@/components/post/vote-button";
 import { useComments } from "@/hooks/use-comments.hook";
+import { usePost } from "@/hooks/use-post.hook";
 import { authClient } from "@/lib/auth-client";
 import { orpcClient } from "@/lib/orpc-client";
-import { VoteButton } from "@/components/post/vote-button";
-import { CommentCard } from "@/components/comment/comment-card";
-import { Button, TextArea } from "heroui-native";
 
 export default function PostDetail() {
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -89,23 +89,12 @@ export default function PostDetail() {
 				<View className="bg-content1 rounded-lg p-4" style={{ borderCurve: "continuous" }}>
 					{showCommentInput ? (
 						<View className="gap-3">
-							<TextArea
-								value={commentText}
-								onChangeText={setCommentText}
-								placeholder="Write a comment..."
-								numberOfLines={4}
-								className="min-h-24"
-							/>
+							<TextArea value={commentText} onChangeText={setCommentText} placeholder="Write a comment..." numberOfLines={4} className="min-h-24" />
 							<View className="flex-row gap-2 justify-end">
 								<Button variant="light" onPress={() => setShowCommentInput(false)}>
 									Cancel
 								</Button>
-								<Button
-									variant="primary"
-									isLoading={isSubmitting}
-									onPress={handleCommentSubmit}
-									isDisabled={!commentText.trim()}
-								>
+								<Button variant="primary" isLoading={isSubmitting} onPress={handleCommentSubmit} isDisabled={!commentText.trim()}>
 									Post
 								</Button>
 							</View>
@@ -134,9 +123,7 @@ export default function PostDetail() {
 							{comments.map((comment) => (
 								<CommentCard key={comment.id} comment={comment} />
 							))}
-							{comments.length === 0 && !isLoading && (
-								<Text className="text-foreground-400 text-center py-4">No comments yet</Text>
-							)}
+							{comments.length === 0 && !isLoading && <Text className="text-foreground-400 text-center py-4">No comments yet</Text>}
 						</View>
 					)}
 					{hasMore && (

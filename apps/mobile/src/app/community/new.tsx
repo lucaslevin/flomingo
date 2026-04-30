@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { ScrollView, View, Text, Alert } from "react-native";
 import { router } from "expo-router";
+import { Button, Input, Label, TextArea } from "heroui-native";
+import { useState } from "react";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { authClient } from "@/lib/auth-client";
 import { orpcClient } from "@/lib/orpc-client";
-import { Button, Input, Label, TextArea } from "heroui-native";
 
 export default function CreateCommunity() {
 	const [name, setName] = useState("");
@@ -46,32 +46,15 @@ export default function CreateCommunity() {
 
 				<View className="gap-2">
 					<Label>Name</Label>
-					<Input
-						value={name}
-						onChangeText={setName}
-						placeholder="Community name"
-						autoCapitalize="none"
-					/>
+					<Input value={name} onChangeText={setName} placeholder="Community name" autoCapitalize="none" />
 				</View>
 
 				<View className="gap-2">
 					<Label>Description (optional)</Label>
-					<TextArea
-						value={description}
-						onChangeText={setDescription}
-						placeholder="What is this community about?"
-						numberOfLines={4}
-						className="min-h-24"
-					/>
+					<TextArea value={description} onChangeText={setDescription} placeholder="What is this community about?" numberOfLines={4} className="min-h-24" />
 				</View>
 
-				<Button
-					onPress={handleSubmit}
-					isLoading={isLoading}
-					variant="primary"
-					className="mt-2"
-					isDisabled={!name.trim()}
-				>
+				<Button onPress={handleSubmit} isLoading={isLoading} variant="primary" className="mt-2" isDisabled={!name.trim()}>
 					Create
 				</Button>
 			</View>

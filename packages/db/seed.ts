@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/bun-sql";
 import { nanoid } from "nanoid";
 import * as schema from "./schema";
 
-const client = new SQL(process.env.DATABASE_URL!);
+const client = new SQL(process.env.DATABASE_URL as string);
 const db = drizzle({ client, schema });
 
 const communities = [

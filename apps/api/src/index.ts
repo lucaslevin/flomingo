@@ -1,7 +1,7 @@
 import { auth } from "@flomingo/auth";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
-import { onError, ORPCError, ValidationError } from "@orpc/server";
+import { ORPCError, onError, ValidationError } from "@orpc/server";
 import { ZodToJsonSchemaConverter } from "@orpc/zod";
 import { Hono } from "hono";
 import * as z from "zod";
@@ -21,11 +21,7 @@ const handler = new OpenAPIHandler(router, {
 	],
 	interceptors: [
 		onError((error) => {
-			if (
-				error instanceof ORPCError &&
-				error.code === "BAD_REQUEST" &&
-				error.cause instanceof ValidationError
-			) {
+			if (error instanceof ORPCError && error.code === "BAD_REQUEST" && error.cause instanceof ValidationError) {
 				const zodError = new z.ZodError(error.cause.issues as z.ZodIssue[]);
 				throw new ORPCError("INPUT_VALIDATION_FAILED", {
 					status: 422,
@@ -35,11 +31,7 @@ const handler = new OpenAPIHandler(router, {
 				});
 			}
 
-			if (
-				error instanceof ORPCError &&
-				error.code === "INTERNAL_SERVER_ERROR" &&
-				error.cause instanceof ValidationError
-			) {
+			if (error instanceof ORPCError && error.code === "INTERNAL_SERVER_ERROR" && error.cause instanceof ValidationError) {
 				const zodError = new z.ZodError(error.cause.issues as z.ZodIssue[]);
 				throw new ORPCError("OUTPUT_VALIDATION_FAILED", {
 					status: 500,

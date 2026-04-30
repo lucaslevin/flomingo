@@ -20,7 +20,7 @@ export function usePosts(communitySlug?: string) {
 		{
 			revalidateFirstPage: false,
 			revalidateOnFocus: false,
-		}
+		},
 	);
 
 	const posts = data?.flatMap((page) => page.posts) ?? [];

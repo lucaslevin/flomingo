@@ -20,7 +20,7 @@ export function useBookmarks() {
 		{
 			revalidateFirstPage: false,
 			revalidateOnFocus: false,
-		}
+		},
 	);
 
 	const bookmarks = (data?.flatMap((page) => page.bookmarks) ?? []) as BookmarkItem[];

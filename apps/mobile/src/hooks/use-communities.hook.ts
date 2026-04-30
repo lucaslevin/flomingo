@@ -19,7 +19,7 @@ export function useCommunities() {
 		{
 			revalidateFirstPage: false,
 			revalidateOnFocus: false,
-		}
+		},
 	);
 
 	const communities = data?.flatMap((page) => page.communities) ?? [];

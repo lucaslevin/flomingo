@@ -15,7 +15,7 @@ export function useSearch(query: string) {
 		},
 		{
 			revalidateOnFocus: false,
-		}
+		},
 	);
 
 	const results = (data?.results ?? []) as SearchResultItem[];

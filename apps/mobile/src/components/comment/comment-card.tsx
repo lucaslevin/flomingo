@@ -1,5 +1,5 @@
-import { View, Pressable, Text } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Pressable, Text, View } from "react-native";
 import { VoteButton } from "@/components/post/vote-button";
 
 interface CommentCardProps {
@@ -48,9 +48,7 @@ export function CommentCard({ comment, onReply }: CommentCardProps) {
 			<View className="flex-row items-center gap-2 mb-2">
 				<Pressable className="flex-row items-center gap-1">
 					<Ionicons name="person-circle-outline" size={16} color="#878a8c" />
-					<Text className="text-xs text-foreground-500 font-medium">
-						{comment.authorName}
-					</Text>
+					<Text className="text-xs text-foreground-500 font-medium">{comment.authorName}</Text>
 				</Pressable>
 				<Text className="text-xs text-foreground-400">•</Text>
 				<Text className="text-xs text-foreground-400">{timeAgo}</Text>
@@ -59,15 +57,8 @@ export function CommentCard({ comment, onReply }: CommentCardProps) {
 			<Text className="text-sm leading-relaxed mb-2">{comment.content}</Text>
 
 			<View className="flex-row items-center gap-3">
-				<VoteButton
-					commentId={comment.id}
-					score={comment.score}
-					userVote={comment.userVote}
-				/>
-				<Pressable
-					className="flex-row items-center gap-1"
-					onPress={() => onReply?.(comment.id)}
-				>
+				<VoteButton commentId={comment.id} score={comment.score} userVote={comment.userVote} />
+				<Pressable className="flex-row items-center gap-1" onPress={() => onReply?.(comment.id)}>
 					<Ionicons name="arrow-undo" size={16} color="#878a8c" />
 					<Text className="text-xs text-foreground-500">Reply</Text>
 				</Pressable>

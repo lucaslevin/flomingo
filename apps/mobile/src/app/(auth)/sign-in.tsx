@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { ScrollView, View, Text, Pressable, Alert } from "react-native";
 import { router } from "expo-router";
-import { authClient } from "@/lib/auth-client";
 import { Button, Input, Label } from "heroui-native";
+import { useState } from "react";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignIn() {
 	const [isSignUp, setIsSignUp] = useState(false);
@@ -52,50 +52,27 @@ export default function SignIn() {
 	return (
 		<ScrollView contentInsetAdjustmentBehavior="automatic" className="bg-background">
 			<View className="p-6 gap-6">
-				<Text className="text-2xl font-bold text-center">
-					{isSignUp ? "Create Account" : "Welcome Back"}
-				</Text>
+				<Text className="text-2xl font-bold text-center">{isSignUp ? "Create Account" : "Welcome Back"}</Text>
 
 				<View className="gap-4">
 					{isSignUp && (
 						<View className="gap-2">
 							<Label>Username</Label>
-							<Input
-								value={username}
-								onChangeText={setUsername}
-								placeholder="username"
-								autoCapitalize="none"
-							/>
+							<Input value={username} onChangeText={setUsername} placeholder="username" autoCapitalize="none" />
 						</View>
 					)}
 
 					<View className="gap-2">
 						<Label>Email</Label>
-						<Input
-							value={email}
-							onChangeText={setEmail}
-							placeholder="email@example.com"
-							autoCapitalize="none"
-							keyboardType="email-address"
-						/>
+						<Input value={email} onChangeText={setEmail} placeholder="email@example.com" autoCapitalize="none" keyboardType="email-address" />
 					</View>
 
 					<View className="gap-2">
 						<Label>Password</Label>
-						<Input
-							value={password}
-							onChangeText={setPassword}
-							placeholder="password"
-							secureTextEntry
-						/>
+						<Input value={password} onChangeText={setPassword} placeholder="password" secureTextEntry />
 					</View>
 
-					<Button
-						onPress={handleSubmit}
-						isLoading={isLoading}
-						variant="primary"
-						className="mt-2"
-					>
+					<Button onPress={handleSubmit} isLoading={isLoading} variant="primary" className="mt-2">
 						{isSignUp ? "Create Account" : "Sign In"}
 					</Button>
 				</View>
@@ -127,9 +104,7 @@ export default function SignIn() {
 				</View>
 
 				<Pressable onPress={() => setIsSignUp(!isSignUp)} className="items-center">
-					<Text className="text-foreground-500">
-						{isSignUp ? "Already have an account? Sign In" : "Don't have an account? Create one"}
-					</Text>
+					<Text className="text-foreground-500">{isSignUp ? "Already have an account? Sign In" : "Don't have an account? Create one"}</Text>
 				</Pressable>
 			</View>
 		</ScrollView>

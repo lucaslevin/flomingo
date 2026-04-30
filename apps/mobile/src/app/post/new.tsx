@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { ScrollView, View, Text, Alert } from "react-native";
 import { router } from "expo-router";
+import { Button, Input, Label, TextArea } from "heroui-native";
+import { useState } from "react";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { authClient } from "@/lib/auth-client";
 import { orpcClient } from "@/lib/orpc-client";
-import { Button, Input, Label, TextArea } from "heroui-native";
 
 export default function CreatePost() {
 	const [title, setTitle] = useState("");
@@ -47,42 +47,20 @@ export default function CreatePost() {
 
 				<View className="gap-2">
 					<Label>Community ID (optional)</Label>
-					<Input
-						value={communityId}
-						onChangeText={setCommunityId}
-						placeholder="Community ID"
-						autoCapitalize="none"
-					/>
+					<Input value={communityId} onChangeText={setCommunityId} placeholder="Community ID" autoCapitalize="none" />
 				</View>
 
 				<View className="gap-2">
 					<Label>Title</Label>
-					<Input
-						value={title}
-						onChangeText={setTitle}
-						placeholder="Post title"
-						autoCapitalize="sentences"
-					/>
+					<Input value={title} onChangeText={setTitle} placeholder="Post title" autoCapitalize="sentences" />
 				</View>
 
 				<View className="gap-2">
 					<Label>Content</Label>
-					<TextArea
-						value={content}
-						onChangeText={setContent}
-						placeholder="What's on your mind?"
-						numberOfLines={8}
-						className="min-h-32"
-					/>
+					<TextArea value={content} onChangeText={setContent} placeholder="What's on your mind?" numberOfLines={8} className="min-h-32" />
 				</View>
 
-				<Button
-					onPress={handleSubmit}
-					isLoading={isLoading}
-					variant="primary"
-					className="mt-2"
-					isDisabled={!title.trim() || !content.trim()}
-				>
+				<Button onPress={handleSubmit} isLoading={isLoading} variant="primary" className="mt-2" isDisabled={!title.trim() || !content.trim()}>
 					Post
 				</Button>
 			</View>

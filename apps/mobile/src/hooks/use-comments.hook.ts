@@ -21,7 +21,7 @@ export function useComments(postId: string) {
 		{
 			revalidateFirstPage: false,
 			revalidateOnFocus: false,
-		}
+		},
 	);
 
 	const comments = (data?.flatMap((page) => page.comments) ?? []) as CommentItem[];
