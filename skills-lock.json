@@ -1,11 +1,47 @@
 {
-	"version": 1,
-	"skills": {
-		"heroui-native": {
-			"source": "heroui-inc/heroui",
-			"sourceType": "github",
-			"skillPath": "skills/heroui-native/SKILL.md",
-			"computedHash": "d2fc03a13d03678d40799726a144ba72ba1cb08126176ddbf0a0461c901aef29"
-		}
-	}
+  "version": 1,
+  "skills": {
+    "building-native-ui": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/building-native-ui/SKILL.md",
+      "computedHash": "342df93f481a0dba919f372d6c7b40d2b4bf5b51dd24363aea2e5d0bae27a6fa"
+    },
+    "eas-update-insights": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/eas-update-insights/SKILL.md",
+      "computedHash": "1e75ed22734fb37993f0ae0c57eceeaf37661ab452d7c7f55c740b1e41c2a0c1"
+    },
+    "expo-deployment": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/expo-deployment/SKILL.md",
+      "computedHash": "9ea9f16374765c1b16764a51bd43a64098921b33f48e94d9c5c1cce24b335c10"
+    },
+    "heroui-native": {
+      "source": "heroui-inc/heroui",
+      "sourceType": "github",
+      "skillPath": "skills/heroui-native/SKILL.md",
+      "computedHash": "d2fc03a13d03678d40799726a144ba72ba1cb08126176ddbf0a0461c901aef29"
+    },
+    "native-data-fetching": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/native-data-fetching/SKILL.md",
+      "computedHash": "3cd0ba91f359f9f84cd40f36f356287994a0e952520fac6e03ef7952d0397879"
+    },
+    "upgrading-expo": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/upgrading-expo/SKILL.md",
+      "computedHash": "939a6820e0d6ead943bb4ad93cec647815e73fbc04043401773b2138e9e13b69"
+    },
+    "use-dom": {
+      "source": "expo/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/expo/skills/use-dom/SKILL.md",
+      "computedHash": "8eca0e229f16e3499e5dbf791a79f5a5cba1e98b4af88ca495c903930d7f1ba0"
+    }
+  }
 }

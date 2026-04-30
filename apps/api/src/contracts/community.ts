@@ -1,9 +1,5 @@
-import { schema } from "@flomingo/db";
 import { oc } from "@orpc/contract";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-
-const CommunityInsertSchema = createInsertSchema(schema.communities);
 
 export const communityContract = {
 	list: oc
@@ -41,10 +37,7 @@ export const communityContract = {
 
 	create: oc
 		.input(
-			CommunityInsertSchema.pick({
-				name: true,
-				description: true,
-			}).extend({
+			z.object({
 				name: z.string().min(1).max(50),
 				description: z.string().max(500).optional(),
 			}),

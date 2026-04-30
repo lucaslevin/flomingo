@@ -12,6 +12,7 @@
 		"@expo/vector-icons": "^15.0.3",
 		"@flomingo/api": "workspace:*",
 		"@gorhom/bottom-sheet": "^5.2.8",
+		"@legendapp/list": "^2.0.19",
 		"@orpc/client": "^1.14.0",
 		"@orpc/openapi-client": "^1.14.0",
 		"@react-navigation/bottom-tabs": "^7.4.0",
@@ -23,6 +24,7 @@
 		"expo-haptics": "~55.0.14",
 		"expo-image": "~55.0.9",
 		"expo-linking": "~55.0.14",
+		"expo-network": "~55.0.13",
 		"expo-router": "~55.0.13",
 		"expo-secure-store": "~55.0.13",
 		"expo-splash-screen": "~55.0.19",
@@ -42,6 +44,7 @@
 		"react-native-svg": "15.15.3",
 		"react-native-web": "~0.21.0",
 		"react-native-worklets": "0.7.4",
+		"swr": "^2.4.1",
 		"tailwind-merge": "^3.4.0",
 		"tailwind-variants": "^3.2.2"
 	},

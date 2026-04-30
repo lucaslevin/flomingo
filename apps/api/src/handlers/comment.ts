@@ -1,5 +1,5 @@
-import { db, schema } from "@flomingo/db";
 import { generateEmbedding } from "@flomingo/ai";
+import { db, schema } from "@flomingo/db";
 import { ORPCError } from "@orpc/server";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 import { authed, pub } from "../procedures";

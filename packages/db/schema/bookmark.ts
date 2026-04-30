@@ -4,14 +4,15 @@ import { nanoid } from "nanoid";
 export const bookmarks = pgTable(
 	"bookmarks",
 	{
-		id: text("id").primaryKey().$defaultFn(() => nanoid()),
+		id: text("id")
+			.primaryKey()
+			.$defaultFn(() => nanoid()),
 		userId: text("userId").notNull(),
 		targetId: text("targetId").notNull(),
 		targetType: text("targetType").notNull(),
-		createdAt: timestamp("createdAt").notNull().$defaultFn(() => new Date()),
+		createdAt: timestamp("createdAt")
+			.notNull()
+			.$defaultFn(() => new Date()),
 	},
-	(table) => [
-		uniqueIndex("bookmarks_user_target_idx").on(table.userId, table.targetId, table.targetType),
-		index("bookmarks_target_idx").on(table.targetId, table.targetType),
-	],
+	(table) => [uniqueIndex("bookmarks_user_target_idx").on(table.userId, table.targetId, table.targetType), index("bookmarks_target_idx").on(table.targetId, table.targetType)],
 );

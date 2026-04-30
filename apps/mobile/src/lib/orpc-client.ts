@@ -13,6 +13,9 @@ const link = new OpenAPILink(contract, {
 	},
 	interceptors: [
 		onError((error) => {
+			if (error.code === "UNAUTHORIZED") {
+				return;
+			}
 			console.error(error);
 		}),
 	],

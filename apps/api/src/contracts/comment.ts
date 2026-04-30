@@ -1,19 +1,12 @@
-import { schema } from "@flomingo/db";
 import { oc } from "@orpc/contract";
-import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
-
-const CommentInsertSchema = createInsertSchema(schema.comments);
-const CommentUpdateSchema = createUpdateSchema(schema.comments);
 
 export const commentContract = {
 	create: oc
 		.input(
-			CommentInsertSchema.pick({
-				postId: true,
-				parentCommentId: true,
-				content: true,
-			}).extend({
+			z.object({
+				postId: z.string(),
+				parentCommentId: z.string().nullable(),
 				content: z.string().min(1).max(10000),
 			}),
 		)
@@ -73,10 +66,7 @@ export const commentContract = {
 
 	update: oc
 		.input(
-			CommentUpdateSchema.pick({
-				id: true,
-				content: true,
-			}).extend({
+			z.object({
 				id: z.string(),
 				content: z.string().min(1).max(10000),
 			}),

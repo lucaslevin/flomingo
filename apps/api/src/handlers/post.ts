@@ -1,5 +1,5 @@
-import { db, schema } from "@flomingo/db";
 import { generatePostEmbedding } from "@flomingo/ai";
+import { db, schema } from "@flomingo/db";
 import { ORPCError } from "@orpc/server";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 import { authed, pub } from "../procedures";
@@ -58,8 +58,8 @@ export const byIdPost = pub.post.byId.handler(async ({ input }) => {
 			.where(and(eq(schema.bookmarks.targetId, input.id), eq(schema.bookmarks.targetType, "post"))),
 	]);
 
-	const score = votesResult[0]?.score ?? 0;
-	const bookmarkCount = bookmarkResult[0]?.count ?? 0;
+	const score = Number(votesResult[0]?.score ?? 0);
+	const bookmarkCount = Number(bookmarkResult[0]?.count ?? 0);
 
 	return {
 		id: post.id,
@@ -69,8 +69,8 @@ export const byIdPost = pub.post.byId.handler(async ({ input }) => {
 		authorName: post.author.name,
 		communityId: post.communityId,
 		communitySlug: post.community.slug,
-		createdAt: post.createdAt.getTime(),
-		updatedAt: post.updatedAt.getTime(),
+		createdAt: Number(post.createdAt.getTime()),
+		updatedAt: Number(post.updatedAt.getTime()),
 		score,
 		userVote: 0,
 		bookmarkCount,
@@ -130,18 +130,18 @@ export const listPost = pub.post.list.handler(async ({ input }) => {
 		id: post.id,
 		title: post.title,
 		authorId: post.authorId,
-		authorName: post.author.name,
+		authorName: post.author?.name ?? "Unknown",
 		communityId: post.communityId,
-		communitySlug: post.community.slug,
-		createdAt: post.createdAt.getTime(),
-		score: scoreMap.get(post.id) ?? 0,
-		commentCount: commentCountMap.get(post.id) ?? 0,
-		bookmarkCount: bookmarkCountMap.get(post.id) ?? 0,
+		communitySlug: post.community?.slug ?? "unknown",
+		createdAt: Number(post.createdAt.getTime()),
+		score: Number(scoreMap.get(post.id)) || 0,
+		commentCount: Number(commentCountMap.get(post.id)) || 0,
+		bookmarkCount: Number(bookmarkCountMap.get(post.id)) || 0,
 	}));
 
 	return {
 		posts: postsWithCounts,
-		nextCursor: hasMore ? cursor + limit : null,
+		nextCursor: hasMore ? Number(cursor + limit) : null,
 	};
 });
 

@@ -6,13 +6,7 @@ export const createBookmark = authed.bookmark.create.handler(async ({ input, con
 	const existing = await db
 		.select()
 		.from(schema.bookmarks)
-		.where(
-			and(
-				eq(schema.bookmarks.userId, context.user.id),
-				eq(schema.bookmarks.targetId, input.targetId),
-				eq(schema.bookmarks.targetType, input.targetType),
-			),
-		)
+		.where(and(eq(schema.bookmarks.userId, context.user.id), eq(schema.bookmarks.targetId, input.targetId), eq(schema.bookmarks.targetType, input.targetType)))
 		.limit(1);
 
 	if (existing[0]) {
@@ -126,9 +120,7 @@ export const listBookmark = authed.bookmark.list.handler(async ({ input, context
 });
 
 export const deleteBookmark = authed.bookmark.delete.handler(async ({ input, context }) => {
-	await db
-		.delete(schema.bookmarks)
-		.where(and(eq(schema.bookmarks.targetId, input.targetId), eq(schema.bookmarks.userId, context.user.id)));
+	await db.delete(schema.bookmarks).where(and(eq(schema.bookmarks.targetId, input.targetId), eq(schema.bookmarks.userId, context.user.id)));
 
 	return { success: true };
 });

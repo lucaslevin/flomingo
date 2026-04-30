@@ -1,5 +1,5 @@
-import { db, schema } from "@flomingo/db";
 import { generateEmbedding } from "@flomingo/ai";
+import { db, schema } from "@flomingo/db";
 import { cosineDistance, desc, sql } from "drizzle-orm";
 import { pub } from "../procedures";
 

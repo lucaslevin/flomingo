@@ -1,21 +1,13 @@
-import { schema } from "@flomingo/db";
 import { oc } from "@orpc/contract";
-import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
-
-const PostInsertSchema = createInsertSchema(schema.posts);
-const PostUpdateSchema = createUpdateSchema(schema.posts);
 
 export const postContract = {
 	create: oc
 		.input(
-			PostInsertSchema.pick({
-				title: true,
-				content: true,
-				communityId: true,
-			}).extend({
+			z.object({
 				title: z.string().min(1).max(300),
 				content: z.string().min(1).max(40000),
+				communityId: z.string(),
 			}),
 		)
 		.output(
@@ -76,11 +68,7 @@ export const postContract = {
 
 	update: oc
 		.input(
-			PostUpdateSchema.pick({
-				id: true,
-				title: true,
-				content: true,
-			}).extend({
+			z.object({
 				id: z.string(),
 				title: z.string().min(1).max(300).optional(),
 				content: z.string().min(1).max(40000).optional(),
