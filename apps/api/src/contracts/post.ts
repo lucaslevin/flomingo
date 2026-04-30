@@ -18,7 +18,7 @@ export const postContract = {
 			z.object({
 				title: z.string().min(1).max(300),
 				content: z.string().min(1).max(40000),
-				communityId: z.string(),
+				communityId: z.string().optional(),
 			}),
 		)
 		.output(

@@ -2,7 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { Button } from "heroui-native";
-import { Pressable, ScrollView, Share, Text, View } from "react-native";
+import { Pressable, Share, Text, View } from "react-native";
 import { withUniwind } from "uniwind";
 import { formatTimeAgo } from "@/lib/format";
 import { VoteButton } from "./vote-button";
@@ -38,33 +38,39 @@ export function PostCard({ post, attachments }: PostCardProps) {
 	const timeAgo = formatTimeAgo(post.createdAt);
 
 	const imageAttachments = attachments?.filter((a) => a.type === "image" || a.type === "gif") ?? [];
-	const size = imageAttachments.length === 1 ? 240 : 140;
+	const firstImage = imageAttachments[0];
 
 	return (
-		<Pressable onPress={() => router.push({ pathname: "/post/[id]", params: { id: post.id } })} className="px-4 py-2 gap-3">
-			<Text className="text-xs text-muted">
-				c/{post.communitySlug} · {timeAgo}
-			</Text>
+		<Pressable onPress={() => router.push({ pathname: "/post/[id]", params: { id: post.id } })} className="px-4 py-3 active:bg-surface">
+			<View className="gap-3">
+				<View className="flex-row items-center gap-1">
+					<Text className="text-xs text-muted font-semibold">c/{post.communitySlug}</Text>
+					<Text className="text-xs text-muted">· {timeAgo}</Text>
+				</View>
 
-			<Text className="text-sm text-foreground font-medium leading-snug">{post.title}</Text>
+				<View className="flex-row gap-3">
+					<Text className="flex-1 text-sm text-foreground font-medium leading-snug" numberOfLines={2}>
+						{post.title}
+					</Text>
 
-			{imageAttachments.length > 0 && (
-				<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2 px-4" className="-mx-4">
-					{imageAttachments.map((attachment) => (
-						<View key={attachment.id} className="relative rounded-[12px] overflow-hidden">
-							<Image source={{ uri: attachment.thumbnailUrl || attachment.url }} style={{ width: size, height: size }} contentFit="cover" transition={200} />
-							{attachment.type === "gif" && (
+					{firstImage && (
+						<View className="relative rounded-[8px] overflow-hidden self-start">
+							<Image
+								source={{ uri: firstImage.thumbnailUrl || firstImage.url }}
+								style={{ width: 64, height: 64 }}
+								contentFit="cover"
+								transition={200}
+							/>
+							{firstImage.type === "gif" && (
 								<View className="absolute bottom-1 right-1 bg-black/60 px-1 py-0.5 rounded">
 									<Text className="text-[10px] text-white font-medium">GIF</Text>
 								</View>
 							)}
 						</View>
-					))}
-				</ScrollView>
-			)}
+					)}
+				</View>
 
-			<View className="flex-row items-center justify-between">
-				<View className="flex-row items-center gap-1">
+				<View className="flex-row items-center">
 					<Button
 						variant="ghost"
 						size="sm"
@@ -74,18 +80,11 @@ export function PostCard({ post, attachments }: PostCardProps) {
 						}}
 					>
 						<StyledIonicons name="chatbubble" size={16} className="text-muted" />
-						<Text className="text-xs text-muted">{post.commentCount}</Text>
+						<Text className="text-xs text-muted ml-1">{post.commentCount}</Text>
 					</Button>
 
-					<Button
-						variant="ghost"
-						size="sm"
-						onPress={(e) => {
-							e.stopPropagation();
-						}}
-					>
+					<Button variant="ghost" size="sm" onPress={(e) => e.stopPropagation()}>
 						<StyledIonicons name="bookmark" size={16} className="text-muted" />
-						<Text className="text-xs text-muted">{post.bookmarkCount}</Text>
 					</Button>
 
 					<Button
@@ -93,17 +92,15 @@ export function PostCard({ post, attachments }: PostCardProps) {
 						size="sm"
 						onPress={(e) => {
 							e.stopPropagation();
-							Share.share({
-								message: `Check out this post: ${post.title}`,
-							});
+							Share.share({ message: `Check out this post: ${post.title}` });
 						}}
 					>
 						<StyledIonicons name="share" size={16} className="text-muted" />
 					</Button>
-				</View>
 
-				<View className="ml-12" onStartShouldSetResponder={() => true} onTouchEnd={(e) => e.stopPropagation()}>
-					<VoteButton postId={post.id} score={post.score} userVote={post.userVote ?? 0} />
+					<View className="ml-auto" onStartShouldSetResponder={() => true} onTouchEnd={(e) => e.stopPropagation()}>
+						<VoteButton postId={post.id} score={post.score} userVote={post.userVote ?? 0} />
+					</View>
 				</View>
 			</View>
 		</Pressable>

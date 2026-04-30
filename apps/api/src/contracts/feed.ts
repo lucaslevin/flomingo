@@ -25,6 +25,17 @@ export const feedContract = {
 						score: z.number(),
 						commentCount: z.number(),
 						bookmarkCount: z.number(),
+						attachments: z
+							.array(
+								z.object({
+									id: z.string(),
+									type: z.string(),
+									url: z.string(),
+									thumbnailUrl: z.string().nullable(),
+									order: z.number(),
+								}),
+							)
+							.optional(),
 					}),
 				),
 				nextCursor: z.number().nullable(),

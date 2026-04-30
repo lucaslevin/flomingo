@@ -1,9 +1,12 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import type { LegendListRenderItemProps } from "@legendapp/list";
 import { LegendList } from "@legendapp/list";
+import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
-import { Button, Separator, Spinner, TextArea, useThemeColor } from "heroui-native";
+import { Button, Menu, ScrollShadow, Separator, Spinner, TextArea, useThemeColor } from "heroui-native";
 import { useState } from "react";
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Text, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Text, View } from "react-native";
+import { withUniwind } from "uniwind";
 import { CommentCard } from "@/components/comment/comment-card";
 import { MediaAttachment } from "@/components/post/media-attachment";
 import { VoteButton } from "@/components/post/vote-button";
@@ -14,20 +17,80 @@ import { authClient } from "@/lib/auth-client";
 import { formatTimeAgo } from "@/lib/format";
 import { orpcClient } from "@/lib/orpc-client";
 
-function PostHeader({ post, commentCount }: { post: NonNullable<ReturnType<typeof usePost>["post"]>; commentCount: number }) {
+const StyledIonicons = withUniwind(Ionicons);
+
+function PostHeader({
+	post,
+	commentCount,
+	authorId,
+	sessionUserId,
+	onMenuAction,
+}: {
+	post: NonNullable<ReturnType<typeof usePost>["post"]>;
+	commentCount: number;
+	authorId: string;
+	sessionUserId?: string;
+	onMenuAction?: (action: string) => void;
+}) {
 	const timeAgo = formatTimeAgo(post.createdAt);
+	const [menuOpen, setMenuOpen] = useState(false);
+	const isAuthor = sessionUserId === authorId;
 
 	return (
-		<View className="px-4 pt-4 pb-2">
-			<Text className="text-[10px] text-muted mb-3">
-				c/{post.communitySlug} · {timeAgo}
-			</Text>
-			<View className="flex-row items-center gap-3 mb-3">
-				<Avatar name={post.authorName} size={32} />
-				<Text className="text-base text-foreground font-medium">{post.authorName}</Text>
+		<View className="px-4 pt-4 pb-3">
+			<View className="flex-row items-center justify-between mb-3">
+				<Text className="text-xs text-muted">
+					c/{post.communitySlug} · {timeAgo}
+				</Text>
+				<Menu isOpen={menuOpen} onOpenChange={setMenuOpen} presentation="popover">
+					<Menu.Trigger asChild>
+						<Button isIconOnly variant="ghost" size="sm">
+							<StyledIonicons name="ellipsis-horizontal" size={20} className="text-muted" />
+						</Button>
+					</Menu.Trigger>
+					<Menu.Portal>
+						<Menu.Overlay />
+						<Menu.Content presentation="popover" width={250}>
+							<Menu.Group selectionMode="none" onSelectionChange={(keys) => {
+								const action = Array.from(keys)[0] as string;
+								setMenuOpen(false);
+								onMenuAction?.(action);
+							}}>
+								<Menu.Item id="share">
+									<StyledIonicons name="share-outline" size={20} className="text-foreground" />
+									<Menu.ItemTitle>Share</Menu.ItemTitle>
+								</Menu.Item>
+								<Menu.Item id="bookmark">
+									<StyledIonicons name="bookmark-outline" size={20} className="text-foreground" />
+									<Menu.ItemTitle>Bookmark</Menu.ItemTitle>
+								</Menu.Item>
+								{isAuthor && (
+									<Menu.Item id="edit">
+										<StyledIonicons name="create-outline" size={20} className="text-foreground" />
+										<Menu.ItemTitle>Edit</Menu.ItemTitle>
+									</Menu.Item>
+								)}
+								{isAuthor && (
+									<Menu.Item id="delete" variant="danger">
+										<StyledIonicons name="trash-outline" size={20} className="text-danger" />
+										<Menu.ItemTitle>Delete</Menu.ItemTitle>
+									</Menu.Item>
+								)}
+								<Menu.Item id="report" variant="danger">
+									<StyledIonicons name="flag-outline" size={20} className="text-danger" />
+									<Menu.ItemTitle>Report</Menu.ItemTitle>
+								</Menu.Item>
+							</Menu.Group>
+						</Menu.Content>
+					</Menu.Portal>
+				</Menu>
 			</View>
-			<Text className="text-2xl font-bold text-foreground leading-tight">{post.title}</Text>
-			<Text className="text-base text-foreground leading-relaxed mt-3">{post.content}</Text>
+			<View className="flex-row items-center gap-2 mb-3">
+				<Avatar name={post.authorName} size={28} />
+				<Text className="text-sm text-foreground font-medium">{post.authorName}</Text>
+			</View>
+			<Text className="text-xl font-bold text-foreground leading-tight mb-3">{post.title}</Text>
+			<Text className="text-base text-foreground leading-relaxed">{post.content}</Text>
 
 			{post.attachments && post.attachments.length > 0 && (
 				<View className="mt-4">
@@ -35,7 +98,7 @@ function PostHeader({ post, commentCount }: { post: NonNullable<ReturnType<typeo
 				</View>
 			)}
 
-			<View className="flex-row items-center justify-between mt-6 pb-4">
+			<View className="flex-row items-center justify-between mt-4 pt-3 pb-2">
 				<Text className="text-sm text-muted">{commentCount} comments</Text>
 				<VoteButton postId={post.id} score={post.score} userVote={post.userVote ?? 0} />
 			</View>
@@ -78,9 +141,47 @@ export default function PostDetail() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const { data } = authClient.useSession();
+	const session = data?.session;
+	const sessionUserId = data?.user?.id;
+
+	const handleMenuAction = async (action: string) => {
+		if (!id) return;
+
+		switch (action) {
+			case "delete":
+				Alert.alert("Delete Post", "Are you sure you want to delete this post?", [
+					{ text: "Cancel", style: "cancel" },
+					{
+						text: "Delete",
+						style: "destructive",
+						onPress: async () => {
+							try {
+								await orpcClient.post.delete({ id });
+								router.back();
+							} catch {
+								Alert.alert("Error", "Failed to delete post");
+							}
+						},
+					},
+				]);
+				break;
+			case "share":
+				// TODO: implement share
+				break;
+			case "bookmark":
+				// TODO: implement bookmark
+				break;
+			case "edit":
+				// TODO: implement edit
+				break;
+			case "report":
+				// TODO: implement report
+				break;
+		}
+	};
 
 	const handleCommentSubmit = async (content: string) => {
-		if (!data?.session) {
+		if (!session) {
 			router.push("/sign-in");
 			return;
 		}
@@ -102,47 +203,56 @@ export default function PostDetail() {
 	if (postLoading || !post) {
 		return (
 			<View className="flex-1 justify-center items-center bg-background">
-				<ActivityIndicator size="large" />
+				<Spinner size="lg" />
 			</View>
 		);
 	}
 
 	return (
 		<View className="flex-1 bg-background">
-			<LegendList
-				ListHeaderComponent={
-					<View>
-						<PostHeader post={post} commentCount={comments.length} />
-						<Separator className="mx-4 mb-3" />
-					</View>
-				}
-				data={comments}
-				keyExtractor={(item) => item.id}
-				renderItem={({ item, index }: LegendListRenderItemProps<(typeof comments)[0]>) => (
-					<View className={index % 2 === 0 ? "bg-background" : "bg-surface"}>
-						<CommentCard comment={item} />
-					</View>
-				)}
-				ItemSeparatorComponent={() => <View className="h-2" />}
-				recycleItems={true}
-				onEndReached={hasMore ? () => setSize((s) => s + 1) : undefined}
-				onEndReachedThreshold={0.5}
-				contentInsetAdjustmentBehavior="automatic"
-				ListEmptyComponent={commentsLoading ? <ActivityIndicator size="small" /> : <Text className="text-sm text-muted text-center py-8">No comments yet</Text>}
-				ListFooterComponent={
-					isValidating && comments.length > 0 ? (
-						<View className="py-4">
-							<ActivityIndicator size="small" />
+			<ScrollShadow size={80} LinearGradientComponent={LinearGradient}>
+				<LegendList
+					contentContainerStyle={{ paddingBottom: 100 }}
+					ListHeaderComponent={
+						<View>
+							<PostHeader
+								post={post}
+								commentCount={comments.length}
+								authorId={post.authorId}
+								sessionUserId={sessionUserId}
+								onMenuAction={handleMenuAction}
+							/>
+							<Separator className="mx-4 mb-3" />
 						</View>
-					) : null
-				}
-			/>
+					}
+					data={comments}
+					keyExtractor={(item) => item.id}
+					renderItem={({ item, index }: LegendListRenderItemProps<(typeof comments)[0]>) => (
+						<View className={index % 2 === 0 ? "bg-background" : "bg-surface"}>
+							<CommentCard comment={item} />
+						</View>
+					)}
+					ItemSeparatorComponent={() => <View className="h-2" />}
+					recycleItems={true}
+					onEndReached={hasMore ? () => setSize((s) => s + 1) : undefined}
+					onEndReachedThreshold={0.5}
+					contentInsetAdjustmentBehavior="automatic"
+					ListEmptyComponent={commentsLoading ? <Spinner size="sm" /> : <Text className="text-sm text-muted text-center py-8">No comments yet</Text>}
+					ListFooterComponent={
+						isValidating && comments.length > 0 ? (
+							<View className="py-4">
+								<Spinner size="sm" />
+							</View>
+						) : null
+					}
+				/>
+			</ScrollShadow>
 
-			{data?.session ? (
+			{session ? (
 				<CommentInput onSubmit={handleCommentSubmit} isSubmitting={isSubmitting} />
 			) : (
-				<View className="px-4 pt-4 pb-6 border-t border-border">
-					<Button onPress={() => router.push("/sign-in")} className="w-full py-2.5" variant="primary">
+				<View className="absolute bottom-6 px-4 left-0 right-0 z-50">
+					<Button onPress={() => router.push("/sign-in")} className="w-full" variant="primary">
 						<Button.Label>Sign in to comment</Button.Label>
 					</Button>
 				</View>

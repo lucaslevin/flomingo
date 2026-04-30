@@ -1,5 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { Spinner } from "heroui-native";
+import { ScrollView, Text, View } from "react-native";
 import { PostList } from "@/components/post/post-list";
 import { CreateFab } from "@/components/ui/create-fab";
 import { useCommunity } from "@/hooks/use-community";
@@ -13,7 +14,7 @@ export default function CommunityDetail() {
 	if (communityLoading || !community) {
 		return (
 			<View className="flex-1 justify-center items-center bg-background">
-				<ActivityIndicator size="large" />
+				<Spinner size="lg" />
 			</View>
 		);
 	}

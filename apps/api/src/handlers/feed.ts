@@ -18,7 +18,7 @@ export const listFeed = pub.feed.list.handler(async ({ input }) => {
 			followingFilter
 				? and(isNull(posts.deletedAt), or(inArray(posts.communityId, followingFilter.communityIds), inArray(posts.authorId, followingFilter.userIds)))
 				: isNull(posts.deletedAt),
-		with: { author: true, community: true },
+		with: { author: true, community: true, attachments: true },
 		orderBy: (posts, { desc }) => desc(posts.createdAt),
 		limit: limit + 1,
 		offset: cursor,
@@ -68,6 +68,18 @@ export const listFeed = pub.feed.list.handler(async ({ input }) => {
 		score: Number(scoreMap.get(post.id)) || 0,
 		commentCount: Number(commentCountMap.get(post.id)) || 0,
 		bookmarkCount: Number(bookmarkCountMap.get(post.id)) || 0,
+		attachments: post.attachments
+			? post.attachments
+					.filter((a) => a.type === "image" || a.type === "gif")
+					.sort((a, b) => a.order - b.order)
+					.map((a) => ({
+						id: a.id,
+						type: a.type,
+						url: a.url,
+						thumbnailUrl: a.thumbnailUrl,
+						order: a.order,
+					}))
+			: undefined,
 	}));
 
 	return {

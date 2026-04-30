@@ -1,7 +1,7 @@
 import type { LegendListRenderItemProps } from "@legendapp/list";
 import { LegendList } from "@legendapp/list";
-import { Separator, Tabs } from "heroui-native";
-import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
+import { Separator, Spinner, Tabs } from "heroui-native";
+import { RefreshControl, Text, View } from "react-native";
 import type { FeedType } from "@/hooks/use-feed";
 import { authClient } from "@/lib/auth-client";
 import { PostCard } from "./post-card";
@@ -19,6 +19,13 @@ interface Post {
 	bookmarkCount: number;
 	attachmentCount: number;
 	userVote?: number;
+	attachments?: Array<{
+		id: string;
+		type: string;
+		url: string;
+		thumbnailUrl?: string | null;
+		order: number;
+	}>;
 }
 
 interface PostListProps {
@@ -53,7 +60,7 @@ export function PostList({ posts, isLoading, isValidating, hasMore, onLoadMore, 
 	if (isLoading && posts.length === 0) {
 		return (
 			<View className="flex-1 justify-center items-center py-8">
-				<ActivityIndicator size="large" />
+				<Spinner size="lg" />
 			</View>
 		);
 	}
@@ -62,7 +69,7 @@ export function PostList({ posts, isLoading, isValidating, hasMore, onLoadMore, 
 		<LegendList
 			data={posts}
 			keyExtractor={(item) => item.id}
-			renderItem={({ item }: LegendListRenderItemProps<Post>) => <PostCard post={item} />}
+			renderItem={({ item }: LegendListRenderItemProps<Post>) => <PostCard post={item} attachments={item.attachments} />}
 			recycleItems={true}
 			contentInsetAdjustmentBehavior="automatic"
 			maintainVisibleContentPosition
@@ -87,7 +94,7 @@ export function PostList({ posts, isLoading, isValidating, hasMore, onLoadMore, 
 			ListFooterComponent={
 				isValidating && posts.length > 0 ? (
 					<View className="py-4">
-						<ActivityIndicator size="small" />
+						<Spinner size="sm" />
 					</View>
 				) : null
 			}
