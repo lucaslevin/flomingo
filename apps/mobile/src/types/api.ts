@@ -19,10 +19,14 @@ export interface SearchResultItem {
 	authorId: string;
 	authorName: string;
 	createdAt: number;
-	similarity?: number;
+	similarity: number;
 	title?: string;
 	communityId?: string;
 	communitySlug?: string;
+	postId?: string;
+	voteScore: number;
+	commentCount?: number;
+	combinedScore: number;
 }
 
 export interface BookmarkItem {
