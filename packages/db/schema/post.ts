@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { index, pgTable, text, timestamp, vector } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { users } from "./auth";
+import { attachments } from "./attachment";
 import { comments } from "./comment";
 import { communities } from "./community";
 import { votes } from "./vote";
@@ -16,7 +17,7 @@ export const posts = pgTable(
 		content: text("content").notNull(),
 		authorId: text("authorId").notNull(),
 		communityId: text("communityId").notNull(),
-		embedding: vector("embedding", { dimensions: 1536 }),
+		embedding: vector("embedding", { dimensions: 1024 }),
 		createdAt: timestamp("createdAt")
 			.notNull()
 			.$defaultFn(() => new Date()),
@@ -45,4 +46,5 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
 	}),
 	comments: many(comments),
 	votes: many(votes),
+	attachments: many(attachments),
 }));

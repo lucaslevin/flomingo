@@ -16,7 +16,7 @@ export const comments = pgTable(
 		postId: text("postId").notNull(),
 		parentCommentId: text("parentCommentId"),
 		depth: text("depth").default("0").notNull(),
-		embedding: vector("embedding", { dimensions: 1536 }),
+		embedding: vector("embedding", { dimensions: 1024 }),
 		createdAt: timestamp("createdAt")
 			.notNull()
 			.$defaultFn(() => new Date()),

@@ -7,7 +7,11 @@
 		".": "./index.ts",
 		"./schema": "./schema/index.ts"
 	},
+	"scripts": {
+		"seed": "bun seed.ts"
+	},
 	"dependencies": {
+		"@flomingo/ai": "workspace:*",
 		"drizzle-orm": "^0.45.2",
 		"drizzle-zod": "^0.8.3"
 	}
