@@ -51,11 +51,14 @@ function PostHeader({
 					<Menu.Portal>
 						<Menu.Overlay />
 						<Menu.Content presentation="popover" width={250}>
-							<Menu.Group selectionMode="none" onSelectionChange={(keys) => {
-								const action = Array.from(keys)[0] as string;
-								setMenuOpen(false);
-								onMenuAction?.(action);
-							}}>
+							<Menu.Group
+								selectionMode="none"
+								onSelectionChange={(keys) => {
+									const action = Array.from(keys)[0] as string;
+									setMenuOpen(false);
+									onMenuAction?.(action);
+								}}
+							>
 								<Menu.Item id="share">
 									<StyledIonicons name="share-outline" size={20} className="text-foreground" />
 									<Menu.ItemTitle>Share</Menu.ItemTitle>
@@ -215,13 +218,7 @@ export default function PostDetail() {
 					contentContainerStyle={{ paddingBottom: 100 }}
 					ListHeaderComponent={
 						<View>
-							<PostHeader
-								post={post}
-								commentCount={comments.length}
-								authorId={post.authorId}
-								sessionUserId={sessionUserId}
-								onMenuAction={handleMenuAction}
-							/>
+							<PostHeader post={post} commentCount={comments.length} authorId={post.authorId} sessionUserId={sessionUserId} onMenuAction={handleMenuAction} />
 							<Separator className="mx-4 mb-3" />
 						</View>
 					}

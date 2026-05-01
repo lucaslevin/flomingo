@@ -25,7 +25,7 @@ function ImageGrid({ attachments, onPress }: { attachments: Attachment[]; onPres
 		<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2 px-4" className="-mx-4">
 			{attachments.map((attachment) => (
 				<Pressable key={attachment.id} onPress={() => onPress?.(attachment)}>
-					<View className="relative rounded-[12px] overflow-hidden">
+					<View className="relative rounded-xl overflow-hidden">
 						<Image
 							source={{ uri: attachment.thumbnailUrl || attachment.url }}
 							style={{ width: size, height: size }}
@@ -50,7 +50,7 @@ function LinkPreviewItem({ attachment }: { attachment: Attachment }) {
 
 	return (
 		<TouchableOpacity activeOpacity={0.7} onPress={() => WebBrowser.openBrowserAsync(attachment.url)}>
-			<View className="bg-surface-secondary rounded-[12px] flex-row gap-3 p-3">
+			<View className="bg-surface-secondary rounded-xl flex-row gap-3 p-3">
 				{attachment.ogImageUrl && (
 					<Image
 						source={{ uri: attachment.ogImageUrl }}

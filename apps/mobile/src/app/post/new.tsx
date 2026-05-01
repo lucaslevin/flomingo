@@ -1,18 +1,18 @@
-import { fetchOpenGraph, detectMediaInContent } from "@flomingo/utils/opengraph";
-import { router } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { detectMediaInContent, fetchOpenGraph } from "@flomingo/utils/opengraph";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
 import { Button, Description, Dialog, FieldError, Input, Label, Select, Spinner, TextArea, TextField, useThemeColor } from "heroui-native";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { Image } from "expo-image";
 import { withUniwind } from "uniwind";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useCommunities } from "@/hooks/use-communities";
 import { authClient } from "@/lib/auth-client";
 import { orpcClient } from "@/lib/orpc-client";
-import { useCommunities } from "@/hooks/use-communities";
 
 const StyledIonicons = withUniwind(Ionicons);
 
@@ -29,13 +29,10 @@ interface AttachmentPreview {
 const schema = z.object({
 	title: z.string().min(1, "Title is required"),
 	content: z.string().min(1, "Content is required"),
-	communityId: z
-		.object({
-			value: z.string(),
-			label: z.string(),
-		})
-		.nullable()
-		.optional(),
+	communityId: z.object({
+		value: z.string(),
+		label: z.string(),
+	}),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -58,7 +55,7 @@ export default function CreatePost() {
 		formState: { errors },
 	} = useForm<FormValues>({
 		resolver: zodResolver(schema),
-		defaultValues: { title: "", content: "", communityId: null },
+		defaultValues: { title: "", content: "", communityId: { value: "", label: "" } },
 	});
 
 	const handlePickImage = async () => {
@@ -118,7 +115,7 @@ export default function CreatePost() {
 			const { id: postId } = await orpcClient.post.create({
 				title: values.title.trim(),
 				content: values.content.trim(),
-				communityId: values.communityId?.value || undefined,
+				communityId: values.communityId.value,
 			});
 
 			for (const [index, attachment] of attachments.entries()) {
@@ -193,25 +190,17 @@ export default function CreatePost() {
 							control={control}
 							name="communityId"
 							render={({ field: { onChange, value } }) => (
-								<Select
-									value={value ?? undefined}
-									onValueChange={(option) => onChange(option ?? null)}
-									presentation="bottom-sheet"
-								>
+								<Select value={value ?? undefined} onValueChange={(option) => onChange(option)} presentation="bottom-sheet">
 									<Select.Trigger>
-										<Select.Value placeholder="Choose club" />
+										<Select.Value placeholder="Choose community" />
 										<Select.TriggerIndicator />
 									</Select.Trigger>
 									<Select.Portal>
 										<Select.Overlay />
 										<Select.Content presentation="bottom-sheet" snapPoints={["35%"]}>
-											<Select.ListLabel>Choose a club</Select.ListLabel>
+											<Select.ListLabel>Choose a community</Select.ListLabel>
 											{communities.map((community) => (
-												<Select.Item
-													key={community.id}
-													value={community.id}
-													label={`c/${community.slug}`}
-												/>
+												<Select.Item key={community.id} value={community.id} label={`c/${community.slug}`} />
 											))}
 										</Select.Content>
 									</Select.Portal>
@@ -225,13 +214,7 @@ export default function CreatePost() {
 							render={({ field: { onChange, onBlur, value } }) => (
 								<TextField isInvalid={!!errors.title}>
 									<Label isInvalid={!!errors.title}>Title</Label>
-									<Input
-										value={value}
-										onChangeText={onChange}
-										onBlur={onBlur}
-										placeholder="Post title"
-										autoCapitalize="sentences"
-									/>
+									<Input value={value} onChangeText={onChange} onBlur={onBlur} placeholder="Post title" autoCapitalize="sentences" />
 									<Description>Give your post a descriptive title</Description>
 									{errors.title && <FieldError>{errors.title.message}</FieldError>}
 								</TextField>
@@ -244,32 +227,18 @@ export default function CreatePost() {
 							render={({ field: { onChange, onBlur, value } }) => (
 								<TextField isInvalid={!!errors.content}>
 									<Label isInvalid={!!errors.content}>Content</Label>
-									<TextArea
-										value={value}
-										onChangeText={onChange}
-										onBlur={onBlur}
-										placeholder="What's on your mind?"
-										numberOfLines={8}
-									/>
+									<TextArea value={value} onChangeText={onChange} onBlur={onBlur} placeholder="What's on your mind?" numberOfLines={8} />
 									{errors.content && <FieldError>{errors.content.message}</FieldError>}
 								</TextField>
 							)}
 						/>
 
 						<View className="flex-row gap-2">
-							<Button
-								variant="tertiary"
-								className="flex-1 justify-between"
-								onPress={handlePickImage}
-							>
+							<Button variant="tertiary" className="flex-1 justify-between" onPress={handlePickImage}>
 								<Button.Label>Add Image</Button.Label>
 								<StyledIonicons name="image-outline" size={20} className="text-foreground" />
 							</Button>
-							<Button
-								variant="tertiary"
-								className="flex-1 justify-between"
-								onPress={() => setLinkDialogOpen(true)}
-							>
+							<Button variant="tertiary" className="flex-1 justify-between" onPress={() => setLinkDialogOpen(true)}>
 								<Button.Label>Add Link</Button.Label>
 								<StyledIonicons name="link-outline" size={20} className="text-foreground" />
 							</Button>
@@ -311,13 +280,7 @@ export default function CreatePost() {
 					<Dialog.Content>
 						<Dialog.Title>Add Link</Dialog.Title>
 						<View className="py-4">
-							<Input
-								value={linkUrl}
-								onChangeText={setLinkUrl}
-								placeholder="https://example.com"
-								autoCapitalize="none"
-								keyboardType="url"
-							/>
+							<Input value={linkUrl} onChangeText={setLinkUrl} placeholder="https://example.com" autoCapitalize="none" keyboardType="url" />
 						</View>
 						<View className="flex-row justify-end gap-3">
 							<Button variant="ghost" onPress={() => setLinkDialogOpen(false)}>

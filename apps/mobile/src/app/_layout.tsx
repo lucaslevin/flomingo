@@ -4,8 +4,8 @@ import "../global.css";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, Stack } from "expo-router";
 import { HeroUINativeProvider } from "heroui-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { withUniwind } from "uniwind";
 import { useTheme } from "@/lib/theme";
 

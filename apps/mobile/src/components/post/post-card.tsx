@@ -54,13 +54,8 @@ export function PostCard({ post, attachments }: PostCardProps) {
 					</Text>
 
 					{firstImage && (
-						<View className="relative rounded-[8px] overflow-hidden self-start">
-							<Image
-								source={{ uri: firstImage.thumbnailUrl || firstImage.url }}
-								style={{ width: 64, height: 64 }}
-								contentFit="cover"
-								transition={200}
-							/>
+						<View className="relative rounded-lg overflow-hidden self-start">
+							<Image source={{ uri: firstImage.thumbnailUrl || firstImage.url }} style={{ width: 64, height: 64 }} contentFit="cover" transition={200} />
 							{firstImage.type === "gif" && (
 								<View className="absolute bottom-1 right-1 bg-black/60 px-1 py-0.5 rounded">
 									<Text className="text-[10px] text-white font-medium">GIF</Text>
@@ -70,7 +65,7 @@ export function PostCard({ post, attachments }: PostCardProps) {
 					)}
 				</View>
 
-				<View className="flex-row items-center">
+				<View className="flex-row gap-2 items-center">
 					<Button
 						variant="ghost"
 						size="sm"
@@ -83,11 +78,12 @@ export function PostCard({ post, attachments }: PostCardProps) {
 						<Text className="text-xs text-muted ml-1">{post.commentCount}</Text>
 					</Button>
 
-					<Button variant="ghost" size="sm" onPress={(e) => e.stopPropagation()}>
+					<Button isIconOnly variant="ghost" size="sm" onPress={(e) => e.stopPropagation()}>
 						<StyledIonicons name="bookmark" size={16} className="text-muted" />
 					</Button>
 
 					<Button
+						isIconOnly
 						variant="ghost"
 						size="sm"
 						onPress={(e) => {

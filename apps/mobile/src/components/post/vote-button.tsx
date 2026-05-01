@@ -58,7 +58,7 @@ export function VoteButton({ postId, commentId, score, userVote, onVote }: VoteB
 	return (
 		<View className="flex-row items-center gap-0">
 			<Button isIconOnly variant="ghost" size="sm" onPress={() => handleVote(1)} className="min-w-8 min-h-8">
-				<StyledIonicons name={optimisticVote === 1 ? "arrow-up-circle-fill" : "arrow-up-circle"} size={22} className={optimisticVote === 1 ? "text-accent" : "text-muted"} />
+				<StyledIonicons name="arrow-up-circle" size={22} className={optimisticVote === 1 ? "text-accent" : "text-muted"} />
 			</Button>
 
 			<Text
@@ -69,7 +69,7 @@ export function VoteButton({ postId, commentId, score, userVote, onVote }: VoteB
 			</Text>
 
 			<Button isIconOnly variant="ghost" size="sm" onPress={() => handleVote(-1)} className="min-w-8 min-h-8">
-				<StyledIonicons name={optimisticVote === -1 ? "arrow-down-circle-fill" : "arrow-down-circle"} size={22} className={optimisticVote === -1 ? "text-danger" : "text-muted"} />
+				<StyledIonicons name="arrow-down-circle" size={22} className={optimisticVote === -1 ? "text-danger" : "text-muted"} />
 			</Button>
 		</View>
 	);
