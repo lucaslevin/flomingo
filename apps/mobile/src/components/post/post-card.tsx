@@ -27,6 +27,7 @@ interface PostCardProps {
 		type: string;
 		url: string;
 		thumbnailUrl?: string | null;
+		ogImageUrl?: string | null;
 		order: number;
 	}>;
 }
@@ -37,11 +38,16 @@ export function PostCard({ post, attachments }: PostCardProps) {
 	const router = useRouter();
 	const timeAgo = formatTimeAgo(post.createdAt);
 
-	const imageAttachments = attachments?.filter((a) => a.type === "image" || a.type === "gif") ?? [];
-	const firstImage = imageAttachments[0];
+	const firstImageAttachment = attachments?.find((a) => a.type === "image" || a.type === "gif" || (a.type === "link" && a.ogImageUrl));
+
+	const imageUrl = firstImageAttachment
+		? firstImageAttachment.type === "link"
+			? firstImageAttachment.ogImageUrl
+			: firstImageAttachment.thumbnailUrl || firstImageAttachment.url
+		: null;
 
 	return (
-		<Pressable onPress={() => router.push({ pathname: "/post/[id]", params: { id: post.id } })} className="px-4 py-3 active:bg-surface">
+		<Pressable onPress={() => router.push({ pathname: "/post/[id]", params: { id: post.id } })} className="px-4 py-3">
 			<View className="gap-3">
 				<View className="flex-row items-center gap-1">
 					<Text className="text-xs text-muted font-semibold">c/{post.communitySlug}</Text>
@@ -53,12 +59,17 @@ export function PostCard({ post, attachments }: PostCardProps) {
 						{post.title}
 					</Text>
 
-					{firstImage && (
+					{imageUrl && (
 						<View className="relative rounded-lg overflow-hidden self-start">
-							<Image source={{ uri: firstImage.thumbnailUrl || firstImage.url }} style={{ width: 64, height: 64 }} contentFit="cover" transition={200} />
-							{firstImage.type === "gif" && (
+							<Image source={{ uri: imageUrl }} style={{ width: 64, height: 64 }} contentFit="cover" transition={200} />
+							{firstImageAttachment?.type === "gif" && (
 								<View className="absolute bottom-1 right-1 bg-black/60 px-1 py-0.5 rounded">
 									<Text className="text-[10px] text-white font-medium">GIF</Text>
+								</View>
+							)}
+							{firstImageAttachment?.type === "link" && (
+								<View className="absolute top-1 left-1 bg-foreground/80 p-1 rounded-full">
+									<StyledIonicons name="link" size={12} className="text-background" />
 								</View>
 							)}
 						</View>

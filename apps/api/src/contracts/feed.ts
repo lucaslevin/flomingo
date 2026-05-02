@@ -32,6 +32,7 @@ export const feedContract = {
 									type: z.string(),
 									url: z.string(),
 									thumbnailUrl: z.string().nullable(),
+									ogImageUrl: z.string().nullable(),
 									order: z.number(),
 								}),
 							)

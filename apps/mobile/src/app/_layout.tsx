@@ -1,7 +1,7 @@
-import { ThemeProvider } from "@react-navigation/native";
 import "../global.css";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { ThemeProvider } from "@react-navigation/native";
 import { router, Stack } from "expo-router";
 import { HeroUINativeProvider } from "heroui-native";
 import { TouchableOpacity } from "react-native";
@@ -17,7 +17,7 @@ export default function RootLayout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<ThemeProvider value={theme}>
-				<HeroUINativeProvider>
+				<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
 					<Stack>
 						<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 						<Stack.Screen name="post/[id]" options={{ title: "Post", headerBackTitle: "Back", headerTransparent: true }} />
@@ -26,6 +26,7 @@ export default function RootLayout() {
 							options={{
 								title: "Composer",
 								headerBackTitle: "Cancel",
+								headerTransparent: true,
 								presentation: "modal",
 								headerRight: () => (
 									<TouchableOpacity onPress={() => router.back()}>

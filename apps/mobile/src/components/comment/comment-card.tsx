@@ -48,11 +48,9 @@ function getDepthStyles(depth: number) {
 
 function ActionButton({ icon, label, onPress }: { icon: string; label: string; onPress?: () => void }) {
 	return (
-		<Button variant="ghost" size="sm" onPress={onPress} className="min-h-8 px-0">
-			<View className="flex-row items-center gap-1.5">
-				<StyledIonicons name={icon} size={18} className="text-muted" />
-				{label ? <Text className="text-xs text-muted">{label}</Text> : null}
-			</View>
+		<Button isIconOnly variant="ghost" size="sm" onPress={onPress}>
+			<StyledIonicons name={icon} size={18} className="text-muted" />
+			{label ? <Text className="text-xs text-muted">{label}</Text> : null}
 		</Button>
 	);
 }
@@ -74,14 +72,14 @@ function CommentActions({ comment, onReply }: { comment: CommentCardProps["comme
 	return (
 		<View className="flex-row items-center justify-between mt-2">
 			<VoteButton commentId={comment.id} score={comment.score} userVote={comment.userVote} />
-			<View className="flex-row items-center">
-				<Button variant="ghost" size="sm" onPress={() => onReply?.(comment.id)} className="min-h-8 px-0">
-					<View className="flex-row items-center gap-1.5">
-						<StyledIonicons name="chatbubble" size={18} className="text-muted" />
-						<Text className="text-xs text-muted font-medium">Reply</Text>
-					</View>
+
+			<View className="flex-row gap-2 items-center">
+				<Button variant="ghost" size="sm" onPress={() => onReply?.(comment.id)}>
+					<StyledIonicons name="chatbubble" size={18} className="text-muted" />
+					<Text className="text-xs text-muted font-medium">Reply</Text>
 				</Button>
-				<View className="ml-4">
+
+				<View>
 					<ActionButton icon="bookmark" label={comment.bookmarkCount > 0 ? `${comment.bookmarkCount}` : ""} />
 				</View>
 			</View>

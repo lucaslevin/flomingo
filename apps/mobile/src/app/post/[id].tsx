@@ -39,15 +39,18 @@ function PostHeader({
 	return (
 		<View className="px-4 pt-4 pb-3">
 			<View className="flex-row items-center justify-between mb-3">
-				<Text className="text-xs text-muted">
-					c/{post.communitySlug} · {timeAgo}
-				</Text>
+				<View className="flex-row items-center gap-1">
+					<Text className="text-xs text-muted font-semibold">c/{post.communitySlug}</Text>
+					<Text className="text-xs text-muted">· {timeAgo}</Text>
+				</View>
+
 				<Menu isOpen={menuOpen} onOpenChange={setMenuOpen} presentation="popover">
 					<Menu.Trigger asChild>
 						<Button isIconOnly variant="ghost" size="sm">
 							<StyledIonicons name="ellipsis-horizontal" size={20} className="text-muted" />
 						</Button>
 					</Menu.Trigger>
+
 					<Menu.Portal>
 						<Menu.Overlay />
 						<Menu.Content presentation="popover" width={250}>
@@ -63,22 +66,26 @@ function PostHeader({
 									<StyledIonicons name="share-outline" size={20} className="text-foreground" />
 									<Menu.ItemTitle>Share</Menu.ItemTitle>
 								</Menu.Item>
+
 								<Menu.Item id="bookmark">
 									<StyledIonicons name="bookmark-outline" size={20} className="text-foreground" />
 									<Menu.ItemTitle>Bookmark</Menu.ItemTitle>
 								</Menu.Item>
+
 								{isAuthor && (
 									<Menu.Item id="edit">
 										<StyledIonicons name="create-outline" size={20} className="text-foreground" />
 										<Menu.ItemTitle>Edit</Menu.ItemTitle>
 									</Menu.Item>
 								)}
+
 								{isAuthor && (
 									<Menu.Item id="delete" variant="danger">
 										<StyledIonicons name="trash-outline" size={20} className="text-danger" />
 										<Menu.ItemTitle>Delete</Menu.ItemTitle>
 									</Menu.Item>
 								)}
+
 								<Menu.Item id="report" variant="danger">
 									<StyledIonicons name="flag-outline" size={20} className="text-danger" />
 									<Menu.ItemTitle>Report</Menu.ItemTitle>
@@ -88,12 +95,14 @@ function PostHeader({
 					</Menu.Portal>
 				</Menu>
 			</View>
+
 			<View className="flex-row items-center gap-2 mb-3">
 				<Avatar name={post.authorName} size={28} />
 				<Text className="text-sm text-foreground font-medium">{post.authorName}</Text>
 			</View>
-			<Text className="text-xl font-bold text-foreground leading-tight mb-3">{post.title}</Text>
-			<Text className="text-base text-foreground leading-relaxed">{post.content}</Text>
+
+			<Text className="text-lg font-bold text-foreground leading-snug mb-3">{post.title}</Text>
+			<Text className="text-sm text-foreground leading-relaxed">{post.content}</Text>
 
 			{post.attachments && post.attachments.length > 0 && (
 				<View className="mt-4">

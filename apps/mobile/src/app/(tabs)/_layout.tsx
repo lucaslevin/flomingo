@@ -18,8 +18,8 @@ function ThemedTabLayout() {
 					<NativeTabs.Trigger.Icon sf={{ default: "flame", selected: "flame.fill" }} md="whatshot" />
 				</NativeTabs.Trigger>
 
-				<NativeTabs.Trigger name="clubs">
-					<NativeTabs.Trigger.Label>Clubs</NativeTabs.Trigger.Label>
+				<NativeTabs.Trigger name="communities">
+					<NativeTabs.Trigger.Label>Communities</NativeTabs.Trigger.Label>
 					<NativeTabs.Trigger.Icon sf={{ default: "person.2", selected: "person.2.fill" }} md="group" />
 				</NativeTabs.Trigger>
 

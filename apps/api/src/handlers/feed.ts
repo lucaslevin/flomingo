@@ -70,13 +70,13 @@ export const listFeed = pub.feed.list.handler(async ({ input }) => {
 		bookmarkCount: Number(bookmarkCountMap.get(post.id)) || 0,
 		attachments: post.attachments
 			? post.attachments
-					.filter((a) => a.type === "image" || a.type === "gif")
 					.sort((a, b) => a.order - b.order)
 					.map((a) => ({
 						id: a.id,
 						type: a.type,
 						url: a.url,
 						thumbnailUrl: a.thumbnailUrl,
+						ogImageUrl: a.ogImageUrl,
 						order: a.order,
 					}))
 			: undefined,

@@ -4,7 +4,7 @@ import { Pressable, ScrollView, Text, TouchableOpacity, View } from "react-nativ
 
 export interface Attachment {
 	id: string;
-	type: "image" | "gif" | "link";
+	type: string;
 	url: string;
 	thumbnailUrl?: string | null;
 	order: number;
